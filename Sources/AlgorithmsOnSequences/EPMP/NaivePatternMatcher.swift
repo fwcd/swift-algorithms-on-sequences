@@ -9,13 +9,11 @@ public struct NaivePatternMatcher: ExactPatternMatcher {
         var positions: [C.Index] = []
         search:
         for startIndex in text.startIndex..<text.index(text.endIndex, offsetBy: -pattern.count + 1) {
-            var i = pattern.startIndex
             var j = startIndex
-            for _ in 0..<pattern.count {
+            for i in pattern.indices {
                 if pattern[i] != text[j] {
                     continue search
                 }
-                i = pattern.index(after: i)
                 j = text.index(after: j)
             }
             positions.append(startIndex)
