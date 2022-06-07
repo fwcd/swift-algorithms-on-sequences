@@ -2,8 +2,12 @@ import XCTest
 @testable import AlgorithmsOnSequences
 
 final class ExactPatternMatcherTests: XCTestCase {
-    func testNaivePatternMatcher() throws {
+    func testNaivePatternMatcher() {
         testExactPatternMatcher(NaivePatternMatcher.self)
+    }
+
+    func testZBoxPatternMatcher() {
+        testExactPatternMatcher(ZBoxPatternMatcher.self)
     }
 
     private func testExactPatternMatcher<M>(_ type: M.Type) where M: ExactPatternMatcher {
