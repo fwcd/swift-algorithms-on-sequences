@@ -8,5 +8,8 @@ public protocol ExactPatternMatcher {
     ///   - text: The sequence to search in
     /// - Returns: The indices at which the pattern occurs in the text
     static func findAllOccurrences<C>(of pattern: C, in text: C) -> [C.Index]
-        where C: Collection, C.SubSequence: Equatable
+        where C: Collection,
+              C.SubSequence: Equatable,
+              C.Index: Strideable,
+              C.Index.Stride: SignedInteger
 }
