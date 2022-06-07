@@ -2,9 +2,7 @@
 public struct ZBoxPatternMatcher: ExactPatternMatcher {
     public static func findAllOccurrences<C>(of pattern: C, in text: C) -> [C.Index]
         where C: Collection,
-              C.Element: Equatable,
-              C.Index: Strideable,
-              C.Index.Stride: SignedInteger {
+              C.Element: Equatable {
         // TODO
         return []
     }

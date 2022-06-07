@@ -3,12 +3,13 @@
 public struct NaivePatternMatcher: ExactPatternMatcher {
     public static func findAllOccurrences<C>(of pattern: C, in text: C) -> [C.Index]
         where C: Collection,
-              C.Element: Equatable,
-              C.Index: Strideable,
-              C.Index.Stride: SignedInteger {
+              C.Element: Equatable {
+        guard !text.isEmpty else { return [] }
+        guard !pattern.isEmpty else { return Array(text.indices) + [text.endIndex] }
+
         var positions: [C.Index] = []
         search:
-        for startIndex in text.startIndex..<text.index(text.endIndex, offsetBy: -pattern.count + 1) {
+        for startIndex in text[text.startIndex...(text.index(text.endIndex, offsetBy: -pattern.count, limitedBy: text.startIndex) ?? text.startIndex)].indices {
             var j = startIndex
             for i in pattern.indices {
                 if pattern[i] != text[j] {
