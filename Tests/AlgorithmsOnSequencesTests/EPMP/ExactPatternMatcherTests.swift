@@ -14,7 +14,7 @@ final class ExactPatternMatcherTests: XCTestCase {
         assertThat(type, finds: "abc", in: "abcabc", at: [0, 3])
         assertThat(type, finds: "aa", in: "aaaaa", at: [0, 1, 2, 3])
         assertThat(type, finds: "def", in: "feddEf", at: [])
-        assertThat(type, finds: "", in: "test", at: [0, 1, 2, 3, 4])
+        assertThat(type, finds: "", in: "test", at: [0, 1, 2, 3])
         assertThat(type, finds: "ba", in: "abba", at: [2])
         assertThat(type, finds: "ba", in: "abbaabba", at: [2, 6])
     }
