@@ -5,12 +5,14 @@ extension Collection where Element: Equatable {
     /// - Parameter rhs: The sequence to compare against.
     /// - Returns: The longest common prefix.
     public func longestCommonPrefix(_ rhs: Self) -> SubSequence {
+        var end = startIndex
         for (i, j) in zip(indices, rhs.indices) {
             if self[i] != rhs[j] {
                 return self[..<i]
             }
+            end = index(after: end)
         }
-        return self[...]
+        return self[..<end]
     }
 
     /// Computes the length of the longest common prefix
