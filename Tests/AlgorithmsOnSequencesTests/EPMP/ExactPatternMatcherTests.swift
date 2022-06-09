@@ -7,6 +7,8 @@ final class ExactPatternMatcherTests: XCTestCase {
     }
 
     func testZBoxPatternMatcher() {
+        XCTAssertEqual(ZBoxPatternMatcher.findLongestCommonPrefixes(in: Array("ananas")), [6, 0, 3, 0, 1, 0])
+
         testExactPatternMatcher(ZBoxPatternMatcher.self)
     }
 

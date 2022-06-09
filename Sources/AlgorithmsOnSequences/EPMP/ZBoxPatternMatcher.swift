@@ -19,7 +19,7 @@ public struct ZBoxPatternMatcher: ExactPatternMatcher {
     /// 
     /// - Parameter text: The text to use
     /// - Returns: The longest common prefixes of every suffix with the text itself
-    private static func findLongestCommonPrefixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
+    public static func findLongestCommonPrefixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
         // The lcp of the text with the first suffix (itself) is its own length
         var lcps: [Int] = [text.count]
         var window: Range<Int> = 0..<text.count
