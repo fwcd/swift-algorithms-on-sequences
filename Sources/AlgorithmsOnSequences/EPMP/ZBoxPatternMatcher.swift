@@ -1,39 +1,62 @@
+import Darwin
+
 /// A linear time pattern matcher.
 public struct ZBoxPatternMatcher: ExactPatternMatcher {
     public static func findAllOccurrences<Element>(of pattern: [Element], in text: [Element]) -> [Int] where Element: Equatable {
         // Concatenate pattern, boundary and text
         let tokens = pattern.map(Token.element) + [.boundary] + text.map(Token.element)
 
-        // Compute lcps (Z-boxes) by finding the longest common prefixes at each index with itself
+        // Compute lcps (Z-Boxes) by finding the longest common prefixes at each index with itself
         let lcps = findLongestCommonPrefixes(in: tokens)
 
-        // Use the lcps (Z-boxes) to compute the actual occurrences
+        // Use the lcps (Z-Boxes) to compute the actual occurrences
         return (0..<text.count)
             .filter { lcps[$0 + pattern.count + 1] == pattern.count }
     }
 
     /// Finds the longest common prefixes of every suffix with the text itself
-    /// (i.e. computes the Z-boxes).
+    /// (i.e. computes the Z-Boxes).
     /// 
     /// - Parameter text: The text to use
     /// - Returns: The longest common prefixes of every suffix with the text itself
     private static func findLongestCommonPrefixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
         // The lcp of the text with the first suffix (itself) is its own length
         var lcps: [Int] = [text.count]
-        var l = 0
-        var r = text.count - 1
+        var window: Range<Int> = 0..<text.count
         
         // Compute the lcps using a dynamic programming-esque approach -
         // every iteration uses the lcps up to (but not including) i.
         for i in 1..<text.count {
-            // TODO: This is currently quadratic, refactor to include to central trick
-            var k = 0
-            while i + k < text.count && text[k] == text[i + k] {
-                k += 1
+            if i > window.endIndex {
+                // We are past our window, search explicitly
+                var k = 0
+                while i + k < text.count && text[k] == text[i + k] {
+                    k += 1
+                }
+                lcps.append(k)
+                window = i..<(i + k)
+            } else {
+                // Reuse previous information (this is the crucial trick of this algorithm,
+                // if we were to search explicitly in every iteration like in the if-branch
+                // we would have quadratic run time, thereby not really improving over the
+                // naive algorithm).
+                let remaining = window.endIndex - i
+                if i - window.startIndex < lcps.count && lcps[i - window.startIndex] < remaining {
+                    // The corresponding lcp at the beginning is smaller than the remaining
+                    // part of the window, reuse it (we don't need to update the window in
+                    // this case either)
+                    lcps.append(lcps[i - window.startIndex])
+                } else {
+                    // Search explicitly past the window
+                    var q = 0
+                    while window.endIndex + q < text.count && text[remaining + q] == text[window.endIndex + q] {
+                        q += 1
+                    }
+                    let k = remaining + q
+                    lcps.append(k)
+                    window = i..<(i + k)
+                }
             }
-            lcps.append(k)
-            l = i + 1
-            r = i + k
         }
 
         return lcps
