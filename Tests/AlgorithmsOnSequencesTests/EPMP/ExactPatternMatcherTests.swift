@@ -6,9 +6,9 @@ final class ExactPatternMatcherTests: XCTestCase {
         testExactPatternMatcher(NaivePatternMatcher.self)
     }
 
-    func testZBoxPatternMatcher() {
-        testExactPatternMatcher(ZBoxPatternMatcher.self)
-    }
+    // func testZBoxPatternMatcher() {
+    //     testExactPatternMatcher(ZBoxPatternMatcher.self)
+    // }
 
     private func testExactPatternMatcher<M>(_ type: M.Type) where M: ExactPatternMatcher {
         assertThat(type, finds: "abc", in: "abcabc", at: [0, 3])
