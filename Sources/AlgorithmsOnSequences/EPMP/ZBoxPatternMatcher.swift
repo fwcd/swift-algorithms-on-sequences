@@ -1,5 +1,3 @@
-import Darwin
-
 /// A linear time pattern matcher.
 public struct ZBoxPatternMatcher: ExactPatternMatcher {
     public static func findAllOccurrences<Element>(of pattern: [Element], in text: [Element]) -> [Int] where Element: Equatable {
@@ -22,7 +20,7 @@ public struct ZBoxPatternMatcher: ExactPatternMatcher {
     public static func findLongestCommonPrefixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
         // The lcp of the text with the first suffix (itself) is its own length
         var lcps: [Int] = [text.count]
-        var window: Range<Int> = 0..<text.count
+        var window: Range<Int> = 0..<0
         
         // Compute the lcps using a dynamic programming-esque approach -
         // every iteration uses the lcps up to (but not including) i.
