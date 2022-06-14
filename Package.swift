@@ -25,7 +25,10 @@ let package = Package(
         ),
         .testTarget(
             name: "AlgorithmsOnSequencesTests",
-            dependencies: ["AlgorithmsOnSequences"]
+            dependencies: ["AlgorithmsOnSequences"],
+            resources: [
+                .copy("Resources"),
+            ]
         ),
     ]
 )

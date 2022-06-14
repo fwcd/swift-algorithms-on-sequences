@@ -13,14 +13,18 @@ class Options:
     max_pattern_length: int
     alphabet: str
 
-@dataclass
-class TestCase:
+@dataclass(eq=True, frozen=True)
+class TestInputs:
     pattern: str
     text: str
+
+@dataclass(frozen=True)
+class TestCase:
+    inputs: TestInputs
     expected: list[int]
 
     def render(self) -> str:
-        return f'assertThat(type, finds: "{self.pattern}", in: "{self.text}", at: [{", ".join(str(n) for n in self.expected)}])'
+        return f'{self.inputs.pattern};{self.inputs.text};{",".join(str(n) for n in self.expected)}'
 
 def find_all(pattern: str, text: str) -> Iterable[int]:
     i = text.find(pattern)
@@ -29,13 +33,19 @@ def find_all(pattern: str, text: str) -> Iterable[int]:
         i = text.find(pattern, i + 1)
 
 def generate_testcases(opts: Options) -> Iterable[TestCase]:
+    visited = set()
     for i in range(opts.number):
-        pattern_length = random.randint(1, opts.max_pattern_length)
-        text_length = random.randint(1, opts.max_text_length)
-        pattern = ''.join(random.choices(opts.alphabet, k=pattern_length))
-        text = ''.join(random.choices(opts.alphabet, k=text_length))
-        expected = list(find_all(pattern, text))
-        yield TestCase(pattern=pattern, text=text, expected=expected)
+        inputs = None
+        while inputs is None or inputs in visited:
+            pattern_length = random.randint(1, opts.max_pattern_length)
+            text_length = random.randint(1, opts.max_text_length)
+            pattern = ''.join(random.choices(opts.alphabet, k=pattern_length))
+            text = ''.join(random.choices(opts.alphabet, k=text_length))
+            expected = list(find_all(pattern, text))
+            inputs = TestInputs(pattern=pattern, text=text)
+            case = TestCase(inputs=inputs, expected=expected)
+        yield case
+        visited.add(inputs)
 
 def main():
     parser = argparse.ArgumentParser(description='Random generates a bunch of test cases for the EPMP matchers.')
