@@ -5,6 +5,7 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
     private let patternIndexing: Indexing<Element>
     private let badCharacterTable: Matrix<Int>
     private let longestCommonSuffixes: [Int]
+    private let longestCommonBorders: [Int]
     private let rightmostCopyTable: [Int]
 
     public init(pattern: [Element]) {
@@ -26,8 +27,9 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
             }
         }
 
-        // Common longest common suffixes of the pattern with itself in O(n)
+        // Common longest common suffixes and borders of the pattern with itself in O(n)
         let longestCommonSuffixes = ZBoxUtils.findLongestCommonSuffixes(in: pattern)
+        let longestCommonBorders = ZBoxUtils.findLongestCommonBorders(in: pattern)
 
         // Compute rightmost copy table for good suffix rule
         var rightmostCopyTable = Array(repeating: 0, count: pattern.count)
@@ -42,6 +44,7 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
         self.patternIndexing = patternIndexing
         self.badCharacterTable = badCharacterTable
         self.longestCommonSuffixes = longestCommonSuffixes
+        self.longestCommonBorders = longestCommonBorders
         self.rightmostCopyTable = rightmostCopyTable
     }
 
@@ -49,28 +52,47 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
         guard !pattern.isEmpty else { return Array(text.indices) }
         guard pattern.count <= text.count else { return [] }
 
-        var i = pattern.count - 1
+        var k = pattern.count - 1
         var occurrences: [Int] = []
 
         // Search the text
         // Note: In Boyer-Moore we scan the pattern backwards
         search:
-        while i < text.count {
-            for j in 0..<pattern.count {
-                let textIndex = i - j
-                let patternIndex = pattern.count - 1 - j
-                let textElement = text[textIndex]
-                let patternElement = pattern[patternIndex]
+        while k < text.count {
+            var i = pattern.count - 1
+            var h = k
 
-                if textElement != patternElement {
-                    // Bad character rule
-                    let shift = patternIndexing.index(for: textElement).map { badCharacterTable[$0, patternIndex] }
-                    i += shift ?? patternIndex + 1
-                    continue search
-                }
+            while i >= 0 && pattern[i] == text[h] {
+                i -= 1
+                h -= 1
             }
-            occurrences.append(i - pattern.count + 1)
-            i += 1
+
+            if i < 0 {
+                // We found an occurrence
+                occurrences.append(k - pattern.count + 1)
+                if longestCommonBorders.count > 1 {
+                    k += pattern.count - longestCommonBorders[1]
+                } else {
+                    k += 1
+                }
+            } else {
+                // Shift k according to max of bad character and good suffix shift
+                let badCharacterShift = patternIndexing.index(for: text[h]).map { badCharacterTable[$0, i] } ?? i - 1
+                let goodSuffixShift: Int
+                if i == pattern.count - 1 {
+                    // Did not match at all
+                    goodSuffixShift = 1
+                } else {
+                    let rmc = rightmostCopyTable[i + 1]
+                    if rmc > 0 {
+                        goodSuffixShift = pattern.count - rmc
+                    } else {
+                        goodSuffixShift = pattern.count - longestCommonBorders[i + 1]
+                    }
+                }
+                // TODO: Use goodSuffixShift
+                k += max(badCharacterShift, 1)
+            }
         }
 
         return occurrences
