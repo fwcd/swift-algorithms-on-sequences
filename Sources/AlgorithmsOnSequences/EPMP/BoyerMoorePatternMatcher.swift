@@ -11,16 +11,22 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
         guard !pattern.isEmpty else { return Array(text.indices) }
         guard pattern.count <= text.count else { return [] }
 
+        var i = pattern.count - 1
         var occurrences: [Int] = []
 
+        // Search the text
+        // Note: In Boyer-Moore we scan the pattern backwards
         search:
-        for i in (pattern.count - 1)..<text.count {
+        while i < text.count {
             for j in 0..<pattern.count {
                 if text[i - j] != pattern[pattern.count - 1 - j] {
+                    // TODO: Bad character rule
+                    i += 1
                     continue search
                 }
             }
             occurrences.append(i - pattern.count + 1)
+            i += 1
         }
 
         return occurrences
