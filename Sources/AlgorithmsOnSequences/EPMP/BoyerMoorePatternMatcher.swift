@@ -85,13 +85,12 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
                 } else {
                     let rmc = rightmostCopyTable[i + 1]
                     if rmc > 0 {
-                        goodSuffixShift = pattern.count - rmc
+                        goodSuffixShift = pattern.count - rmc - 1
                     } else {
                         goodSuffixShift = pattern.count - longestCommonBorders[i + 1]
                     }
                 }
-                // TODO: Use goodSuffixShift
-                k += max(badCharacterShift, 1)
+                k += max(badCharacterShift, goodSuffixShift)
             }
         }
 
