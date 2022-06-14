@@ -25,6 +25,16 @@ public struct Indexing<Element>: Sequence where Element: Hashable {
         self.elementToIndex = elementToIndex
     }
 
+    /// Maps an element to an integer or nil, if a mapping does not exist. O(1).
+    public func index(for element: Element) -> Int? {
+        elementToIndex[element]
+    }
+
+    /// Maps an integer to an element or nil, if a mapping does not exist. O(1).
+    public func element(for i: Int) -> Element? {
+        elements.indices.contains(i) ? elements[i] : nil
+    }
+
     /// Maps an element to an integer. O(1).
     public subscript(_ element: Element) -> Int {
         elementToIndex[element]!

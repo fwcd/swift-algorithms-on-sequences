@@ -17,8 +17,12 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
             for j in 0..<pattern.count {
                 // Find first occurrence of element to the left of j
                 var shift = 1
-                while j >= shift && pattern[j - shift] != element {
+                while j - shift >= 0 && pattern[j - shift] != element {
                     shift += 1
+                }
+                // If it doesn't occur, shift by the length of the entire pattern
+                if j - shift < 0 {
+                    shift = pattern.count
                 }
                 badCharacterTable[i, j] = shift
             }
@@ -48,7 +52,7 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
 
                 if textElement != patternElement {
                     // Bad character rule
-                    i += badCharacterTable[patternIndexing[patternElement], patternIndex]
+                    i += patternIndexing.index(for: textElement).map { badCharacterTable[$0, patternIndex] } ?? pattern.count
                     continue search
                 }
             }
