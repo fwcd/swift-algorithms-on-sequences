@@ -1,10 +1,32 @@
 /// An efficient string search algorithm developed by Robert S. Boyer
 /// and J Strother Moore in 1977 that preprocesses the pattern.
-public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Element: Equatable {
+public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Element: Hashable {
     private let pattern: [Element]
+    private let patternIndexing: Indexing<Element>
+    private let badCharacterTable: Table<Int>
 
     public init(pattern: [Element]) {
+        // Generate indexings
+        let patternIndexing = Indexing(pattern)
+
+        // Generate bad character table
+        // First index (row): character in alphabet (see indexing scheme above)
+        // Second index (col): index in the pattern
+        var badCharacterTable = Table(height: patternIndexing.count, width: pattern.count, element: 0)
+        for (element, i) in patternIndexing {
+            for j in 0..<pattern.count {
+                // Find first occurrence of element to the left of j
+                var shift = 1
+                while j >= shift && pattern[j - shift] != element {
+                    shift += 1
+                }
+                badCharacterTable[i, j] = shift
+            }
+        }
+
         self.pattern = pattern
+        self.patternIndexing = patternIndexing
+        self.badCharacterTable = badCharacterTable
     }
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
@@ -19,9 +41,14 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
         search:
         while i < text.count {
             for j in 0..<pattern.count {
-                if text[i - j] != pattern[pattern.count - 1 - j] {
-                    // TODO: Bad character rule
-                    i += 1
+                let textIndex = i - j
+                let patternIndex = pattern.count - 1 - j
+                let textElement = text[textIndex]
+                let patternElement = pattern[patternIndex]
+
+                if textElement != patternElement {
+                    // Bad character rule
+                    i += badCharacterTable[patternIndexing[patternElement], patternIndex]
                     continue search
                 }
             }
