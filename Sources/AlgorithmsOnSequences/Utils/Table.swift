@@ -9,10 +9,10 @@ public struct Table<Element> {
     public private(set) var height: Int
 
     init(width: Int, _ elements: [Element]) {
-        assert(elements.count % width == 0)
+        assert((width == 0 && elements.isEmpty) || (elements.count % width == 0))
         self.elements = elements
         self.width = width
-        self.height = elements.count / width
+        self.height = elements.isEmpty ? 0 : elements.count / width
     }
 
     init(height: Int, width: Int, element: Element) {
