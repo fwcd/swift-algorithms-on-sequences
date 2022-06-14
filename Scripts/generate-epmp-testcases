@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+import argparse
+import random
+
+from dataclasses import dataclass
+from typing import Iterable
+
+@dataclass
+class Options:
+    number: int
+    max_text_length: int
+    max_pattern_length: int
+    alphabet: str
+
+@dataclass
+class TestCase:
+    pattern: str
+    text: str
+    expected: list[int]
+
+    def render(self) -> str:
+        return f'assertThat(type, finds: "{self.pattern}", in: "{self.text}", at: [{", ".join(str(n) for n in self.expected)}])'
+
+def find_all(pattern: str, text: str) -> Iterable[int]:
+    i = text.find(pattern)
+    while i != -1:
+        yield i
+        i = text.find(pattern, i + 1)
+
+def generate_testcases(opts: Options) -> Iterable[TestCase]:
+    for i in range(opts.number):
+        pattern_length = random.randint(1, opts.max_pattern_length)
+        text_length = random.randint(1, opts.max_text_length)
+        pattern = ''.join(random.choices(opts.alphabet, k=pattern_length))
+        text = ''.join(random.choices(opts.alphabet, k=text_length))
+        expected = list(find_all(pattern, text))
+        yield TestCase(pattern=pattern, text=text, expected=expected)
+
+def main():
+    parser = argparse.ArgumentParser(description='Random generates a bunch of test cases for the EPMP matchers.')
+    parser.add_argument('-n', '--number', type=int, default=100, help='The number of test cases to generate')
+    parser.add_argument('-t', '--max-text-length', type=int, default=20, help='The maximum text length')
+    parser.add_argument('-p', '--max-pattern-length', type=int, default=4, help='The maximum pattern length')
+    parser.add_argument('-a', '--alphabet', default='ab', help='The set of characters to use')
+
+    args = parser.parse_args()
+    opts = Options(
+        number=args.number,
+        max_text_length=args.max_text_length,
+        max_pattern_length=args.max_pattern_length,
+        alphabet=args.alphabet
+    )
+
+    for case in generate_testcases(opts):
+        print(case.render())
+
+if __name__ == '__main__':
+    main()
+
