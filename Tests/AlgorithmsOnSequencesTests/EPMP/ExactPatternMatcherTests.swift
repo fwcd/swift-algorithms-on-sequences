@@ -24,6 +24,7 @@ final class ExactPatternMatcherTests: XCTestCase {
         assertThat(type, finds: "", in: "test", at: [0, 1, 2, 3])
         assertThat(type, finds: "ba", in: "abba", at: [2])
         assertThat(type, finds: "ba", in: "abbaabba", at: [2, 6])
+        assertThat(type, finds: "aaa", in: "abaaa", at: [2])
 
         // Automatically generated test cases (using Scripts/generate-epmp-testcases)
 
