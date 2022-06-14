@@ -67,6 +67,11 @@ public enum ZBoxUtils {
 
         return lcps
     }
+
+    /// Finds the longest common suffix of every prefix with the text itself.
+    public static func findLongestCommonSuffixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
+        findLongestCommonPrefixes(in: text.reversed()).reversed()
+    }
 }
 
 /// A token for use in the Z-Box algorithm.
