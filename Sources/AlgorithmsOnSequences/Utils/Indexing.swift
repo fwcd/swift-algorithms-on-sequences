@@ -3,6 +3,11 @@ public struct Indexing<Element> where Element: Hashable {
     private let elementToIndex: [Element: Int]
     private let elements: [Element]
 
+    /// Whether there are no elements. O(1).
+    public var isEmpty: Bool { elements.isEmpty }
+    /// The number of elements. O(1).
+    public var count: Int { elements.count }
+
     /// Creates an indexing from the given elements. Duplicate elements
     /// are allowed, but will be skipped.
     /// 
@@ -16,12 +21,12 @@ public struct Indexing<Element> where Element: Hashable {
         self.elements = elements
     }
 
-    /// Maps an element to an integer.
+    /// Maps an element to an integer. O(1).
     public subscript(_ element: Element) -> Int {
         elementToIndex[element]!
     }
 
-    /// Maps an integer to an element.
+    /// Maps an integer to an element. O(1).
     public subscript(_ i: Int) -> Element {
         elements[i]
     }
