@@ -11,6 +11,10 @@ final class ExactPatternMatcherTests: XCTestCase {
         testExactPatternMatcher(ZBoxPatternMatcher.self)
     }
 
+    func testBoyerMoorePatternMatcher() {
+        testExactPatternMatcher(BoyerMoorePatternMatcher.self)
+    }
+
     private func testExactPatternMatcher<M>(_ type: M.Type)
         where M: ExactPatternMatcher,
               M.Element == Character {

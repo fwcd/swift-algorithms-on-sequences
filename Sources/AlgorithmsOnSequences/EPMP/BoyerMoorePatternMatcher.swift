@@ -8,6 +8,21 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
     }
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
-        fatalError("TODO")
+        guard !pattern.isEmpty else { return Array(text.indices) }
+        guard pattern.count <= text.count else { return [] }
+
+        var occurrences: [Int] = []
+
+        search:
+        for i in (pattern.count - 1)..<text.count {
+            for j in 0..<pattern.count {
+                if text[i - j] != pattern[pattern.count - 1 - j] {
+                    continue search
+                }
+            }
+            occurrences.append(i - pattern.count + 1)
+        }
+
+        return occurrences
     }
 }
