@@ -24,7 +24,7 @@ class TestCase:
     expected: list[int]
 
     def render(self) -> str:
-        return f'assertThat(type, finds: "{self.inputs.pattern}", in: "{self.inputs.text}", at: [{", ".join(str(n) for n in self.expected)}])'
+        return f'{self.inputs.pattern};{self.inputs.text};{",".join(str(n) for n in self.expected)}'
 
 def find_all(pattern: str, text: str) -> Iterable[int]:
     i = text.find(pattern)
