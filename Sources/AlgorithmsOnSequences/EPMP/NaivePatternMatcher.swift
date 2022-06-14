@@ -1,7 +1,13 @@
 /// The naive, quadratic time algorithm for finding
 /// the pattern in the text.
-public struct NaivePatternMatcher: ExactPatternMatcher {
-    public static func findAllOccurrences<Element>(of pattern: [Element], in text: [Element]) -> [Int] where Element: Equatable {
+public struct NaivePatternMatcher<Element>: ExactPatternMatcher where Element: Equatable {
+    private let pattern: [Element]
+
+    public init(pattern: [Element]) {
+        self.pattern = pattern
+    }
+
+    public func findAllOccurrences(in text: [Element]) -> [Int] {
         guard !pattern.isEmpty else { return Array(text.indices) }
 
         var occurrences: [Int] = []

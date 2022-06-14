@@ -1,17 +1,25 @@
 /// A linear time pattern matcher.
-public struct ZBoxPatternMatcher: ExactPatternMatcher {
-    public static func findAllOccurrences<Element>(of pattern: [Element], in text: [Element]) -> [Int] where Element: Equatable {
+public struct ZBoxPatternMatcher<Element>: ExactPatternMatcher where Element: Equatable {
+    private let pattern: [Element]
+
+    public init(pattern: [Element]) {
+        self.pattern = pattern
+    }
+
+    public func findAllOccurrences(in text: [Element]) -> [Int] {
         // Concatenate pattern, boundary and text
         let tokens = pattern.map(Token.element) + [.boundary] + text.map(Token.element)
 
         // Compute lcps (Z-Boxes) by finding the longest common prefixes at each index with itself
-        let lcps = findLongestCommonPrefixes(in: tokens)
+        let lcps = ZBoxUtils.findLongestCommonPrefixes(in: tokens)
 
         // Use the lcps (Z-Boxes) to compute the actual occurrences
         return (0..<text.count)
             .filter { lcps[$0 + pattern.count + 1] == pattern.count }
     }
+}
 
+public enum ZBoxUtils {
     /// Finds the longest common prefixes of every suffix with the text itself
     /// (i.e. computes the Z-Boxes).
     /// 

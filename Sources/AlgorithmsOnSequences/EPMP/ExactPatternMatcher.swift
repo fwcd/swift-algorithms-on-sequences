@@ -1,12 +1,19 @@
-/// An algorithm that finds all occurrences of a
-/// string (the pattern) in another (the text).
+/// An algorithm that finds all occurrences of a string (the pattern)
+/// in another (the text). The matcher is initialized with a pattern
+/// to allow the algorithm to preprocess the pattern.
 public protocol ExactPatternMatcher {
+    associatedtype Element
+
+    /// Creates a new pattern matcher, possibly preprocessing the
+    /// given pattern.
+    /// 
+    /// - Parameter pattern: The pattern to search for
+    init(pattern: [Element])
+
     /// Finds all occurrences of the given pattern in the given text.
     /// 
     /// - Parameters:
-    ///   - pattern: The pattern to search for
     ///   - text: The sequence to search in
     /// - Returns: The indices at which the pattern occurs in the text
-    static func findAllOccurrences<Element>(of pattern: [Element], in text: [Element]) -> [Int]
-        where Element: Equatable
+    func findAllOccurrences(in text: [Element]) -> [Int]
 }
