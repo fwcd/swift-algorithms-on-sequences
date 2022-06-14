@@ -68,9 +68,32 @@ public enum ZBoxUtils {
         return lcps
     }
 
-    /// Finds the longest common suffix of every prefix with the text itself.
+    /// Finds the longest common suffixes of every prefix with the text itself.
+    /// 
+    /// - Parameter text: The text to use
+    /// - Returns: The longest common suffixes of every prefix with the text itself
     public static func findLongestCommonSuffixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
         findLongestCommonPrefixes(in: text.reversed()).reversed()
+    }
+
+    /// Finds the longest common borders of the text with every suffix of itself.
+    /// 
+    /// - Parameter text: The text to use
+    /// - Returns: The longest common borders of the text with every suffix of itself
+    public static func findLongestCommonBorders<Element>(in text: [Element]) -> [Int] where Element: Equatable {
+        let lcss = findLongestCommonSuffixes(in: text)
+        var lcbs: [Int] = Array(repeating: 0, count: text.count)
+        var maxK = 0
+
+        for k in 0..<lcbs.count {
+            let lcs = lcss[k]
+            if k == lcs - 1 {
+                maxK = max(maxK, lcs)
+            }
+            lcbs[lcbs.count - 1 - k] = maxK
+        }
+
+        return lcbs
     }
 }
 
