@@ -9,6 +9,7 @@ public struct NaivePatternMatcher<Element>: ExactPatternMatcher where Element: E
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
         guard !pattern.isEmpty else { return Array(text.indices) }
+        guard pattern.count <= text.count else { return [] }
 
         var occurrences: [Int] = []
 
