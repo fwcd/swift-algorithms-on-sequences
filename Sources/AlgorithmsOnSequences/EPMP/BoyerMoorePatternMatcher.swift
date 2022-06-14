@@ -3,7 +3,7 @@
 public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Element: Hashable {
     private let pattern: [Element]
     private let patternIndexing: Indexing<Element>
-    private let badCharacterTable: Table<Int>
+    private let badCharacterTable: Matrix<Int>
 
     public init(pattern: [Element]) {
         // Generate indexings
@@ -12,7 +12,7 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
         // Generate bad character table
         // First index (row): character in alphabet (see indexing scheme above)
         // Second index (col): index in the pattern
-        var badCharacterTable = Table(height: patternIndexing.count, width: pattern.count, element: 0)
+        var badCharacterTable = Matrix(height: patternIndexing.count, width: pattern.count, element: 0)
         for (element, i) in patternIndexing {
             for j in 0..<pattern.count {
                 // Find first occurrence of element to the left of j
