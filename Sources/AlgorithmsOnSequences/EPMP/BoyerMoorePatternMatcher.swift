@@ -4,6 +4,8 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
     private let pattern: [Element]
     private let patternIndexing: Indexing<Element>
     private let badCharacterTable: Matrix<Int>
+    private let longestCommonSuffixes: [Int]
+    private let rightmostCopyTable: [Int]
 
     public init(pattern: [Element]) {
         // Generate indexings
@@ -24,9 +26,23 @@ public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Eleme
             }
         }
 
+        // Common longest common suffixes of the pattern with itself in O(n)
+        let longestCommonSuffixes = ZBoxUtils.findLongestCommonSuffixes(in: pattern)
+
+        // Compute rightmost copy table for good suffix rule
+        var rightmostCopyTable = Array(repeating: 0, count: pattern.count)
+        for j in 0..<pattern.count {
+            let lcs = longestCommonSuffixes[j]
+            if lcs > 0 {
+                rightmostCopyTable[pattern.count - lcs] = j
+            }
+        }
+
         self.pattern = pattern
         self.patternIndexing = patternIndexing
         self.badCharacterTable = badCharacterTable
+        self.longestCommonSuffixes = longestCommonSuffixes
+        self.rightmostCopyTable = rightmostCopyTable
     }
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {

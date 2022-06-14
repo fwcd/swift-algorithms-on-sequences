@@ -26,6 +26,8 @@ public enum ZBoxUtils {
     /// - Parameter text: The text to use
     /// - Returns: The longest common prefixes of every suffix with the text itself
     public static func findLongestCommonPrefixes<Element>(in text: [Element]) -> [Int] where Element: Equatable {
+        guard !text.isEmpty else { return [] }
+
         // The lcp of the text with the first suffix (itself) is its own length
         var lcps: [Int] = [text.count]
         var window: Range<Int> = 0..<0
