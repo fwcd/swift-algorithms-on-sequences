@@ -1,5 +1,5 @@
 /// A bidirectional mapping between a finite set of elements and integers.
-public struct Indexing<Element> where Element: Hashable {
+public struct Indexing<Element>: Sequence where Element: Hashable {
     private let elementToIndex: [Element: Int]
     private let elements: [Element]
 
@@ -12,13 +12,17 @@ public struct Indexing<Element> where Element: Hashable {
     /// are allowed, but will be skipped.
     /// 
     /// - Parameter elements: The elements to create an indexing from
-    public init(_ elements: [Element]) {
+    public init(_ elementsIncludingDuplicates: [Element]) {
+        var elements: [Element] = []
+
         var elementToIndex: [Element: Int] = [:]
-        for element in elements where !elementToIndex.keys.contains(element) {
+        for element in elementsIncludingDuplicates where !elementToIndex.keys.contains(element) {
             elementToIndex[element] = elementToIndex.count
+            elements.append(element)
         }
 
         self.elements = elements
+        self.elementToIndex = elementToIndex
     }
 
     /// Maps an element to an integer. O(1).
@@ -37,5 +41,9 @@ public struct Indexing<Element> where Element: Hashable {
     /// - Returns: Whether this indexing contains the element
     public func contains(_ element: Element) -> Bool {
         elementToIndex.keys.contains(element)
+    }
+
+    public func makeIterator() -> Dictionary<Element, Int>.Iterator {
+        elementToIndex.makeIterator()
     }
 }
