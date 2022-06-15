@@ -25,10 +25,9 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
         var results: [(patternLength: Int, textLength: Int, time: TimeInterval)] = []
 
         for m in stride(from: 1_000, through: 10_000, by: 1_000) {
+            let pattern = Array(repeating: "ab", count: m).flatMap { $0 }
+            let matcher = M.init(pattern: pattern)
             for n in stride(from: 1_000, through: 10_000, by: 1_000) {
-                print(n, m)
-                let pattern = Array(repeating: "ab", count: m).flatMap { $0 }
-                let matcher = M.init(pattern: pattern)
                 let text = Array(repeating: "ab", count: n).flatMap { $0 }
                 let start = Date()
                 _ = matcher.findAllOccurrences(in: text)
