@@ -7,6 +7,9 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
     @Option(name: .shortAndLong, help: "The directory to place outputs in")
     var outputBaseDir: String = "./Output"
 
+    @Flag(name: .long, help: "Only uses (ab)* style strings as patterns/texts")
+    var useRepeatedStrings: Bool = false
+
     func run() throws {
         try FileManager.default.createDirectory(atPath: outputBaseDir, withIntermediateDirectories: true)
 
@@ -25,10 +28,11 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
         var results: [(patternLength: Int, textLength: Int, time: TimeInterval)] = []
 
         for m in stride(from: 1_000, through: 10_000, by: 1_000) {
-            let pattern = Array(repeating: "ab", count: m).flatMap { $0 }
+            let pattern = generateString(chunks: m)
             let matcher = M.init(pattern: pattern)
             for n in stride(from: 1_000, through: 10_000, by: 1_000) {
-                let text = Array(repeating: "ab", count: n).flatMap { $0 }
+                print("  m = \(m), n = \(n)")
+                let text = generateString(chunks: n)
                 let start = Date()
                 _ = matcher.findAllOccurrences(in: text)
                 results.append((
@@ -45,5 +49,15 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
 
         try FileManager.default.createDirectory(atPath: outputDir, withIntermediateDirectories: true)
         try outputData.write(toFile: outputPath, atomically: false, encoding: .utf8)
+    }
+
+    private func generateString(chunks: Int) -> [Character] {
+        let chunk = Array("ab")
+        var s: [Character] = []
+        s.reserveCapacity(chunks * chunk.count)
+        for _ in 0..<chunks {
+            s += useRepeatedStrings || Bool.random() ? chunk : chunk.reversed()
+        }
+        return s
     }
 }
