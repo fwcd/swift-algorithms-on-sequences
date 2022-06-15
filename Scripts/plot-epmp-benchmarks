@@ -3,14 +3,16 @@
 import argparse
 import pathlib
 import matplotlib.pyplot as plt
+import numpy as np
 
+from scipy.interpolate import griddata
 from typing import Iterable
 
 def parse_results(raw: str) -> Iterable[float]:
     for line in raw.splitlines():
         if line.strip():
-            raw_text_len, raw_time = line.split(';')
-            yield (int(raw_text_len), float(raw_time))
+            raw_pattern_len, raw_text_len, raw_time = line.split(';')
+            yield (int(raw_pattern_len), int(raw_text_len), float(raw_time))
 
 def main():
     parser = argparse.ArgumentParser(description='Plots EPMP benchmark results')
@@ -20,11 +22,14 @@ def main():
 
     for path in pathlib.Path(args.dir_path).iterdir():
         with open(path, 'r') as f:
-            text_len, time = zip(*list(parse_results(f.read())))
-            plt.plot(text_len, time, label=path.name.split('.')[0])
+            x, y, z = zip(*list(parse_results(f.read())))
+            grid_x, grid_y = np.mgrid[min(x):max(x):100j, min(y):max(y):100j]
+            grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')
+            plt.title(path.name.split('.')[0])
+            plt.xlabel('Pattern length')
+            plt.ylabel('Text length')
+            plt.contourf(grid_x, grid_y, grid_z)
+            plt.show()
     
-    plt.legend(loc='upper left')
-    plt.show()
-
 if __name__ == '__main__':
     main()

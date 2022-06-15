@@ -22,23 +22,27 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
 
         print("[EPMP] Benchmarking \(matcherName)...")
 
-        let pattern = Array("ab")
-        let matcher = M.init(pattern: pattern)
-        var results: [(textLength: Int, time: TimeInterval)] = []
+        var results: [(patternLength: Int, textLength: Int, time: TimeInterval)] = []
 
-        for i in stride(from: 1000, through: 50_000, by: 1000) {
-            let text = Array(repeating: "ab", count: i).flatMap { $0 }
-            let start = Date()
-            _ = matcher.findAllOccurrences(in: text)
-            results.append((
-                textLength: text.count,
-                time: -start.timeIntervalSinceNow
-            ))
+        for m in stride(from: 1_000, through: 10_000, by: 1_000) {
+            for n in stride(from: 1_000, through: 10_000, by: 1_000) {
+                print(n, m)
+                let pattern = Array(repeating: "ab", count: m).flatMap { $0 }
+                let matcher = M.init(pattern: pattern)
+                let text = Array(repeating: "ab", count: n).flatMap { $0 }
+                let start = Date()
+                _ = matcher.findAllOccurrences(in: text)
+                results.append((
+                    patternLength: pattern.count,
+                    textLength: text.count,
+                    time: -start.timeIntervalSinceNow
+                ))
+            }
         }
 
         let outputDir = "\(outputBaseDir)/EPMP"
         let outputPath = "\(outputDir)/\(matcherName).txt"
-        let outputData = results.map { "\($0.textLength);\($0.time)" }.joined(separator: "\n")
+        let outputData = results.map { "\($0.patternLength);\($0.textLength);\($0.time)" }.joined(separator: "\n")
 
         try FileManager.default.createDirectory(atPath: outputDir, withIntermediateDirectories: true)
         try outputData.write(toFile: outputPath, atomically: false, encoding: .utf8)
