@@ -26,6 +26,7 @@ let package = Package(
         .executableTarget(
             name: "AlgorithmsOnSequencesBenchmarks",
             dependencies: [
+                .target(name: "AlgorithmsOnSequences"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
