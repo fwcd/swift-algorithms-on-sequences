@@ -7,6 +7,8 @@ public struct ZBoxPatternMatcher<Element>: ExactPatternMatcher where Element: Eq
     }
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
+        guard pattern.count <= text.count else { return [] }
+
         // Concatenate pattern, boundary and text
         let tokens = pattern.map(Token.element) + [.boundary] + text.map(Token.element)
 
