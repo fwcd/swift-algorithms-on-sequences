@@ -8,7 +8,7 @@ public protocol ExactSetMatcher {
     /// the given patterns.
     /// 
     /// - Parameter patterns: The patterns to search for
-    init(patterns: Set<Element>)
+    init(patterns: Set<[Element]>)
 
     /// Finds all occurrences of any pattern in the given
     /// text.
