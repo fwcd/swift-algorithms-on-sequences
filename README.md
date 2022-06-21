@@ -13,5 +13,5 @@ An implementation of various string search algorithms for Swift.
   - [ ] Knuth-Morris-Pratt algorithm
   - [ ] Ukkonen's algorithm
 - Exact Set Matching Problem (ESMP)
-  - [ ] Naive algorithm
+  - [x] Naive algorithm
   - [ ] Aho-Corasick algorithm
