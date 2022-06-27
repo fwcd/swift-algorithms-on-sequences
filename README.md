@@ -10,7 +10,7 @@ An implementation of various string search algorithms for Swift.
   - [x] Naive algorithm (quadratic time)
   - [x] Z-Box algorithm (linear time)
   - [x] Boyer-Moore algorithm
-  - [ ] Knuth-Morris-Pratt algorithm
+  - [x] Knuth-Morris-Pratt algorithm
   - [ ] Ukkonen's algorithm
 - Exact Set Matching Problem (ESMP)
   - [x] Naive algorithm
