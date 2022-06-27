@@ -44,6 +44,7 @@ public struct KnuthMorrisPrattPatternMatcher<Element>: ExactPatternMatcher where
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
         guard !pattern.isEmpty else { return Array(text.indices) }
+        guard !text.isEmpty else { return [] }
 
         var occurrences: [Int] = []
         var i = 0 // Position within the text
