@@ -9,37 +9,47 @@ public struct KnuthMorrisPrattPatternMatcher<Element>: ExactPatternMatcher where
 
         // Build KMP partial-match table by "pre-searching" the pattern for itself.
 
-        var partialMatchTable = [-1]
-        partialMatchTable.reserveCapacity(pattern.count)
+        var partialMatchTable: [Int] = []
 
-        // Index of next character of current candidate substring in pattern.
-        var candidate = 0
+        if !pattern.isEmpty {
+            partialMatchTable.reserveCapacity(pattern.count + 1)
+            partialMatchTable.append(-1)
 
-        for element in pattern.dropFirst() {
-            if element == pattern[candidate] {
-                partialMatchTable.append(partialMatchTable[candidate])
-            } else {
-                partialMatchTable.append(candidate)
-                while candidate >= 0 && element != pattern[candidate] {
-                    candidate = partialMatchTable[candidate]
+            // Index of next character of current candidate substring in pattern.
+            var candidate = 0
+
+            for element in pattern.dropFirst() {
+                if element == pattern[candidate] {
+                    partialMatchTable.append(partialMatchTable[candidate])
+                } else {
+                    partialMatchTable.append(candidate)
+                    while candidate >= 0 && element != pattern[candidate] {
+                        candidate = partialMatchTable[candidate]
+                    }
                 }
+                candidate += 1
             }
-            candidate += 1
+
+            // Only needed when all word occurrences are searched
+            partialMatchTable.append(candidate)
+
+            assert(
+                partialMatchTable.count == pattern.count + 1,
+                "Expected partial match table of size \(pattern.count + 1), but was \(partialMatchTable.count)"
+            )
         }
 
-        // Only needed when all word occurrences are searched
-        partialMatchTable.append(candidate)
-
-        assert(partialMatchTable.count == pattern.count + 1)
         self.partialMatchTable = partialMatchTable
     }
 
     public func findAllOccurrences(in text: [Element]) -> [Int] {
+        guard !pattern.isEmpty else { return Array(text.indices) }
+
         var occurrences: [Int] = []
         var i = 0 // Position within the text
         var j = 0 // Position within the pattern
 
-        while i <= (text.count - pattern.count) {
+        while i < text.count {
             if text[i] == pattern[j] {
                 i += 1
                 j += 1
