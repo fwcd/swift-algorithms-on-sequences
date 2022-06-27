@@ -16,6 +16,7 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
         try benchmarkEPMP(type: NaivePatternMatcher.self)
         try benchmarkEPMP(type: ZBoxPatternMatcher.self)
         try benchmarkEPMP(type: BoyerMoorePatternMatcher.self)
+        try benchmarkEPMP(type: KnuthMorrisPrattPatternMatcher.self)
     }
 
     private func benchmarkEPMP<M>(type: M.Type) throws

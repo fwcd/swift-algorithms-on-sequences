@@ -18,6 +18,10 @@ final class ExactPatternMatcherTests: XCTestCase {
         testExactPatternMatcher(BoyerMoorePatternMatcher.self)
     }
 
+    func testKnuthMorrisPrattPatternMatcher() {
+        testExactPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
+    }
+
     private func testExactPatternMatcher<M>(_ type: M.Type)
         where M: ExactPatternMatcher,
               M.Element == Character {
