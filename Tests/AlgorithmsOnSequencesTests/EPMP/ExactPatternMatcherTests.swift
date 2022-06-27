@@ -11,6 +11,7 @@ final class ExactPatternMatcherTests: XCTestCase {
         XCTAssertEqual(ZBoxUtils.findLongestCommonSuffixes(in: Array("bananaban")), [0, 0, 3, 0, 2, 0, 0, 0, 9])
         XCTAssertEqual(ZBoxUtils.findLongestCommonPrefixes(in: Array("nabananab")), [9, 0, 0, 0, 2, 0, 3, 0, 0])
         XCTAssertEqual(ZBoxUtils.findLongestCommonBorders(in: Array("bananba")), [7, 2, 2, 2, 2, 2, 0])
+
         testExactPatternMatcher(ZBoxPatternMatcher.self)
     }
 
