@@ -2,7 +2,7 @@
 /// See https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
 public struct KnuthMorrisPrattPatternMatcher<Element>: ExactPatternMatcher where Element: Hashable {
     private let pattern: [Element]
-    private let partialMatchTable: [Int]
+    /* internal for testing */ let partialMatchTable: [Int]
 
     public init(pattern: [Element]) {
         self.pattern = pattern

@@ -19,6 +19,12 @@ final class ExactPatternMatcherTests: XCTestCase {
     }
 
     func testKnuthMorrisPrattPatternMatcher() {
+        // Using the examples from Wikipedia: https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm#Working_example_of_the_table-building_algorithm
+        XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("abcdabd")).partialMatchTable, [-1, 0, 0, 0, -1, 0, 2, 0])
+        XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("abacababc")).partialMatchTable, [-1, 0, -1, 1, -1, 0, -1, 3, 2, 0])
+        XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("abacababa")).partialMatchTable, [-1, 0, -1, 1, -1, 0, -1, 3, -1, 3])
+        XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("participate in parachute")).partialMatchTable, [-1, 0, 0, 0, 0, 0, 0, -1, 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 3, 0, 0, 0, 0, 0, 0])
+
         testExactPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
     }
 
