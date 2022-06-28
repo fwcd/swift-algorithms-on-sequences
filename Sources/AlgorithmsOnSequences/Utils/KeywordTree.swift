@@ -44,11 +44,10 @@ public struct KeywordTree<Edge> where Edge: Hashable {
         children[edge]?.insert(path: path.dropFirst())
     }
 
-    /// Whether this tree contains a node at the given path
-    /// labelled true.
+    /// Whether this tree contains a node at the given path.
     ///
     /// - Parameter path: The path to search
-    /// - Returns: Whether a KeywordTree node with label true exists there
+    /// - Returns: Whether a (final) node exists there
     public func contains<Path>(path: Path) -> Bool
         where Path: Collection,
               Path.Element == Edge {
