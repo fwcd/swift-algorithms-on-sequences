@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+cd "$(dirname $0)/.."
+
+rev="HEAD"
+output_file="Zips/swift-algorithms-on-sequences-$(git rev-parse --short $rev).zip"
+
+mkdir -p Zips
+
+echo "==> Generating $output_file"
+git archive -o "$output_file" "$rev"
