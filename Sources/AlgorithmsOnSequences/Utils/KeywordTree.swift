@@ -1,49 +1,46 @@
-/// A labelled prefix tree.
-public struct KeywordTree<Label, Edge> where Edge: Hashable {
-    public var label: Label
-    public var children: [Edge: KeywordTree<Label, Edge>]
+/// A labelled prefix tree/trie.
+public struct KeywordTree<Edge> where Edge: Hashable {
+    public var isFinal: Bool
+    public var children: [Edge: Self]
 
     /// Creates a new keyword tree.
     /// 
     /// - Parameters:
-    ///   - label: This node's label
-    ///   - children: The children of this node
+    ///   - isFinal: Whether the node represents the end of a string in the tree
+    ///   - children: This node's children
     public init(
-        label: Label,
-        children: [Edge: KeywordTree<Label, Edge>] = [:]
+        isFinal: Bool = false,
+        children: [Edge: Self] = [:]
     ) {
-        self.label = label
+        self.isFinal = isFinal
         self.children = children
     }
 
     /// Fetches the immediate child connected by the given edge.
-    public subscript(edge: Edge) -> KeywordTree<Label, Edge>? {
+    public subscript(edge: Edge) -> Self? {
         get { children[edge] }
         set { children[edge] = newValue }
     }
 
     /// Fetches the child connected by the given path.
-    public subscript<Path>(path: Path) -> KeywordTree<Label, Edge>?
+    public subscript<Path>(path: Path) -> Self?
         where Path: Collection,
               Path.Element == Edge {
         guard let edge = path.first else { return self }
         return children[edge]?[path.dropFirst()]
     }
-}
 
-extension KeywordTree where Label == Bool {
-    /// Inserts the given path into the tree with the leaf
-    /// being labelled with true.
+    /// Inserts the given path into the tree.
     /// 
     /// - Parameter path: The path to insert
     public mutating func insert<Path>(path: Path)
         where Path: Collection,
               Path.Element == Edge {
         guard let edge = path.first else {
-            label = true
+            isFinal = true
             return
         }
-        children[edge] = children[edge] ?? KeywordTree(label: false)
+        children[edge] = children[edge] ?? KeywordTree(isFinal: false)
         children[edge]?.insert(path: path.dropFirst())
     }
 
@@ -55,18 +52,18 @@ extension KeywordTree where Label == Bool {
     public func contains<Path>(path: Path) -> Bool
         where Path: Collection,
               Path.Element == Edge {
-        self[path]?.label ?? false
+        self[path]?.isFinal ?? false
     }
 }
 
-extension KeywordTree where Label == Bool, Edge: Comparable {
+extension KeywordTree where Edge: Comparable {
     /// Create a keyword tree from the given paths.
     /// 
     /// - Parameter paths: The paths to construct the tree from
     public init<Paths>(paths: Paths)
         where Paths: Sequence,
               Paths.Element == [Edge] {
-        self.init(label: false)
+        self.init()
         for path in paths {
             insert(path: path)
         }

@@ -1,7 +1,7 @@
 /// The naive, quadratic time algorithm for finding
 /// the patterns in the text.
 public struct NaiveSetMatcher<Element>: SetMatcher where Element: Hashable & Comparable {
-    private let tree: KeywordTree<Bool, Element>
+    private let tree: KeywordTree<Element>
 
     public init(patterns: Set<[Element]>) {
         tree = KeywordTree(paths: patterns)
@@ -11,13 +11,13 @@ public struct NaiveSetMatcher<Element>: SetMatcher where Element: Hashable & Com
         var occurrences: [Int] = []
 
         for i in 0..<text.count {
-            var node: KeywordTree<Bool, Element> = tree
+            var node: KeywordTree<Element> = tree
             var j = i
-            while j < text.count, !node.label, let child = node[text[j]] {
+            while j < text.count, !node.isFinal, let child = node[text[j]] {
                 node = child
                 j += 1
             }
-            if node.label {
+            if node.isFinal {
                 occurrences.append(i)
             }
         }
