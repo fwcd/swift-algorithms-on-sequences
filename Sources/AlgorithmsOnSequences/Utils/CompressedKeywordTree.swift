@@ -1,6 +1,6 @@
 /// A trie with compressed edges, e.g. suitable for representing (implicit) suffix trees.
-public struct CompressedKeywordTree<Edge> where Edge: Hashable {
-    private var children: [Edge: Child]
+public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
+    /* internal for testing */ var children: [Edge: Child]
 
     public var isLeaf: Bool { children.isEmpty }
 
@@ -21,7 +21,7 @@ public struct CompressedKeywordTree<Edge> where Edge: Hashable {
         }
     }
 
-    private struct Child {
+    /* internal for testing */ struct Child: Hashable {
         var remainingEdges: [Edge] = []
         var node: CompressedKeywordTree<Edge> = .init()
 
@@ -57,7 +57,7 @@ public struct CompressedKeywordTree<Edge> where Edge: Hashable {
     /// Creates a new compressed keyword tree with the given children.
     /// 
     /// - Parameter children: The node's children
-    private init(children: [Edge: Child]) {
+    /* internal for testing */ init(children: [Edge: Child]) {
         self.children = children
     }
 

@@ -1,5 +1,5 @@
 /// A labelled prefix tree/trie.
-public struct KeywordTree<Edge> where Edge: Hashable {
+public struct KeywordTree<Edge>: Hashable where Edge: Hashable {
     public var isFinal: Bool
     public var children: [Edge: Self]
 
