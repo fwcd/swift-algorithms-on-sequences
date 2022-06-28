@@ -10,7 +10,7 @@ public protocol PatternMatcher {
     /// - Parameter pattern: The pattern to search for
     init(pattern: [Element])
 
-    /// Finds all occurrences of the given pattern in the given text.
+    /// Finds all occurrences of the pattern in the given text.
     /// 
     /// - Parameters:
     ///   - text: The sequence to search in
