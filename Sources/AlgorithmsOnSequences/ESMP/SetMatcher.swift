@@ -1,7 +1,7 @@
 /// An algorithm that finds all occurrences of multiple strings
 /// (patterns) in a text. The matcher is initialized with the
 /// set to allow preprocessing.
-public protocol ExactSetMatcher {
+public protocol SetMatcher {
     associatedtype Element: Hashable
 
     /// Creates a new set matcher, possibly preprocessing

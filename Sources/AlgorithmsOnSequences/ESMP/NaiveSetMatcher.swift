@@ -1,6 +1,6 @@
 /// The naive, quadratic time algorithm for finding
 /// the patterns in the text.
-public struct NaiveSetMatcher<Element>: ExactSetMatcher where Element: Hashable & Comparable {
+public struct NaiveSetMatcher<Element>: SetMatcher where Element: Hashable & Comparable {
     private let tree: KeywordTree<Bool, Element>
 
     public init(patterns: Set<[Element]>) {

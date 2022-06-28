@@ -1,9 +1,9 @@
 import XCTest
 @testable import AlgorithmsOnSequences
 
-final class ExactPatternMatcherTests: XCTestCase {
+final class PatternMatcherTests: XCTestCase {
     func testNaivePatternMatcher() {
-        testExactPatternMatcher(NaivePatternMatcher.self)
+        testPatternMatcher(NaivePatternMatcher.self)
     }
 
     func testZBoxPatternMatcher() {
@@ -12,11 +12,11 @@ final class ExactPatternMatcherTests: XCTestCase {
         XCTAssertEqual(ZBoxUtils.findLongestCommonPrefixes(in: Array("nabananab")), [9, 0, 0, 0, 2, 0, 3, 0, 0])
         XCTAssertEqual(ZBoxUtils.findLongestCommonBorders(in: Array("bananba")), [7, 2, 2, 2, 2, 2, 0])
 
-        testExactPatternMatcher(ZBoxPatternMatcher.self)
+        testPatternMatcher(ZBoxPatternMatcher.self)
     }
 
     func testBoyerMoorePatternMatcher() {
-        testExactPatternMatcher(BoyerMoorePatternMatcher.self)
+        testPatternMatcher(BoyerMoorePatternMatcher.self)
     }
 
     func testKnuthMorrisPrattPatternMatcher() {
@@ -26,11 +26,11 @@ final class ExactPatternMatcherTests: XCTestCase {
         XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("abacababa")).partialMatchTable, [-1, 0, -1, 1, -1, 0, -1, 3, -1, 3])
         XCTAssertEqual(KnuthMorrisPrattPatternMatcher(pattern: Array("participate in parachute")).partialMatchTable, [-1, 0, 0, 0, 0, 0, 0, -1, 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 3, 0, 0, 0, 0, 0, 0])
 
-        testExactPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
+        testPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
     }
 
-    private func testExactPatternMatcher<M>(_ type: M.Type)
-        where M: ExactPatternMatcher,
+    private func testPatternMatcher<M>(_ type: M.Type)
+        where M: PatternMatcher,
               M.Element == Character {
         assertThat(type, finds: "abc", in: "abcabc", at: [0, 3])
         assertThat(type, finds: "aa", in: "aaaaa", at: [0, 1, 2, 3])
@@ -57,7 +57,7 @@ final class ExactPatternMatcherTests: XCTestCase {
     }
 
     private func assertThat<M>(_ type: M.Type, finds pattern: String, in text: String, at indices: [Int], line: UInt = #line)
-        where M: ExactPatternMatcher,
+        where M: PatternMatcher,
               M.Element == Character {
         XCTAssertEqual(M.init(pattern: Array(pattern)).findAllOccurrences(in: Array(text)), indices, line: line)
     }

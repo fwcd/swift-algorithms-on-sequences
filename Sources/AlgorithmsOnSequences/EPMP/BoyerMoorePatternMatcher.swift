@@ -1,6 +1,6 @@
 /// An efficient string search algorithm developed by Robert S. Boyer
 /// and J Strother Moore in 1977 that preprocesses the pattern.
-public struct BoyerMoorePatternMatcher<Element>: ExactPatternMatcher where Element: Hashable {
+public struct BoyerMoorePatternMatcher<Element>: PatternMatcher where Element: Hashable {
     private let pattern: [Element]
     private let patternIndexing: Indexing<Element>
     private let badCharacterTable: Matrix<Int>

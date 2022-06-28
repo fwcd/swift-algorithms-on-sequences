@@ -20,7 +20,7 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
     }
 
     private func benchmarkEPMP<M>(type: M.Type) throws
-        where M: ExactPatternMatcher,
+        where M: PatternMatcher,
               M.Element == Character {
         let matcherName = String(describing: type).split(separator: "<")[0]
 

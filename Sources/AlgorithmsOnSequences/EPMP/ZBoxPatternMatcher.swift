@@ -1,5 +1,5 @@
 /// A linear time pattern matcher.
-public struct ZBoxPatternMatcher<Element>: ExactPatternMatcher where Element: Equatable {
+public struct ZBoxPatternMatcher<Element>: PatternMatcher where Element: Equatable {
     private let pattern: [Element]
 
     public init(pattern: [Element]) {

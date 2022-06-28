@@ -1,6 +1,6 @@
 /// The naive, quadratic time algorithm for finding
 /// the pattern in the text.
-public struct NaivePatternMatcher<Element>: ExactPatternMatcher where Element: Equatable {
+public struct NaivePatternMatcher<Element>: PatternMatcher where Element: Equatable {
     private let pattern: [Element]
 
     public init(pattern: [Element]) {

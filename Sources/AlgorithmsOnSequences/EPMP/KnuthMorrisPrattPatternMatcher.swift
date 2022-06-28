@@ -1,6 +1,6 @@
 /// The Knuth-Morris-Pratt linear-time string search algorithm.
 /// See https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm
-public struct KnuthMorrisPrattPatternMatcher<Element>: ExactPatternMatcher where Element: Hashable {
+public struct KnuthMorrisPrattPatternMatcher<Element>: PatternMatcher where Element: Hashable {
     private let pattern: [Element]
     /* internal for testing */ let partialMatchTable: [Int]
 

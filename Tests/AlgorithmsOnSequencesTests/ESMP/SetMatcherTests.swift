@@ -1,13 +1,13 @@
 import XCTest
 @testable import AlgorithmsOnSequences
 
-final class ExactSetMatcherTests: XCTestCase {
+final class SetMatcherTests: XCTestCase {
     func testNaiveSetMatcher() {
-        testExactSetMatcher(NaiveSetMatcher.self)
+        testSetMatcher(NaiveSetMatcher.self)
     }
 
-    private func testExactSetMatcher<M>(_ type: M.Type)
-        where M: ExactSetMatcher,
+    private func testSetMatcher<M>(_ type: M.Type)
+        where M: SetMatcher,
               M.Element == Character {
         assertThat(type, finds: [], in: "abcabc", at: [])
 
@@ -27,7 +27,7 @@ final class ExactSetMatcherTests: XCTestCase {
     }
 
     private func assertThat<M>(_ type: M.Type, finds patterns: Set<String>, in text: String, at indices: [Int], line: UInt = #line)
-        where M: ExactSetMatcher,
+        where M: SetMatcher,
               M.Element == Character {
         XCTAssertEqual(M.init(patterns: Set(patterns.map { Array($0) })).findAllOccurrences(in: Array(text)), indices, line: line)
     }

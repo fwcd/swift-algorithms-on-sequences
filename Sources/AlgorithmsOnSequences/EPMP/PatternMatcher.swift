@@ -1,7 +1,7 @@
 /// An algorithm that finds all occurrences of a string (the pattern)
 /// in another (the text). The matcher is initialized with a pattern
 /// to allow the algorithm to preprocess the pattern.
-public protocol ExactPatternMatcher {
+public protocol PatternMatcher {
     associatedtype Element
 
     /// Creates a new pattern matcher, possibly preprocessing the
