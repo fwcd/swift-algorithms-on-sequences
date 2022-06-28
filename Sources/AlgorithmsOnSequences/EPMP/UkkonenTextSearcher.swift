@@ -7,7 +7,7 @@ public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable
 
         // Iterate phases, in every step i we build the suffix tree of text[...i]
         for element in text {
-            suffixTree.extend(by: element)
+            suffixTree.ukkonenStep(by: element)
         }
 
         textLength = text.count
