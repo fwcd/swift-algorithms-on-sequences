@@ -46,11 +46,8 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
         }
 
         mutating func extend(by edge: Edge) {
-            if node.isLeaf {
-                remainingEdges.append(edge)
-            } else {
-                node.extend(by: edge)
-            }
+            remainingEdges.append(edge)
+            node.extend(by: edge)
         }
     }
 
@@ -78,9 +75,9 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
     /// Extends the tree with the given element
     /// 
     /// - Parameter edge: The element to extend the tree by
-    public mutating func extend(by edge: Edge) {
+    public mutating func extend(by extended: Edge) {
         for edge in children.keys {
-            children[edge]!.extend(by: edge)
+            children[edge]!.extend(by: extended)
         }
     }
 
