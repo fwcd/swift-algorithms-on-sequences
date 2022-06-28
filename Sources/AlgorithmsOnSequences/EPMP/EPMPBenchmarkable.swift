@@ -1,6 +1,9 @@
 /// A generic protocol for EPMP implementations that preprocess
 /// either the pattern or the text. This protocol is only intended
-/// for testing purposes. Clients should use the (more expressive)
+/// for testing purposes.
+/// 
+/// This protocol should be considered an implementation detail,
+/// clients of the library should use the (more expressive)
 /// `PatternMatcher` and `TextSearcher` protocols instead.
 public protocol _EPMPBenchmarkable {
     associatedtype Element
