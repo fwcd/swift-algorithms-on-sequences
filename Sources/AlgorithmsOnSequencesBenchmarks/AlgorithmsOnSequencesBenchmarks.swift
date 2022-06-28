@@ -19,33 +19,34 @@ struct AlgorithmsOnSequencesBenchmarks: ParsableCommand {
         try benchmarkEPMP(type: KnuthMorrisPrattPatternMatcher.self)
     }
 
-    private func benchmarkEPMP<M>(type: M.Type) throws
-        where M: PatternMatcher,
-              M.Element == Character {
-        let matcherName = String(describing: type).split(separator: "<")[0]
+    private func benchmarkEPMP<Benchmarkable>(type: Benchmarkable.Type) throws
+        where Benchmarkable: _EPMPBenchmarkable,
+              Benchmarkable.Element == Character {
+        let name = String(describing: type).split(separator: "<")[0]
 
-        print("[EPMP] Benchmarking \(matcherName)...")
+        print("[EPMP] Benchmarking \(name)...")
 
         var results: [(patternLength: Int, textLength: Int, time: TimeInterval)] = []
 
         for m in stride(from: 1_000, through: 10_000, by: 1_000) {
-            let pattern = generateString(chunks: m)
-            let matcher = M.init(pattern: pattern)
+            let text1 = generateString(chunks: m)
+            let benchmarkable = Benchmarkable(text1: text1)
             for n in stride(from: 1_000, through: 10_000, by: 1_000) {
                 print("  m = \(m), n = \(n)")
-                let text = generateString(chunks: n)
+                let text2 = generateString(chunks: n)
                 let start = Date()
-                _ = matcher.findAllOccurrences(in: text)
+                _ = benchmarkable.findAllOccurrences(with: text2)
+                let resolved = Benchmarkable.resolve(text1: text1, text2: text2)
                 results.append((
-                    patternLength: pattern.count,
-                    textLength: text.count,
+                    patternLength: resolved.pattern.count,
+                    textLength: resolved.text.count,
                     time: -start.timeIntervalSinceNow
                 ))
             }
         }
 
         let outputDir = "\(outputBaseDir)/EPMP"
-        let outputPath = "\(outputDir)/\(matcherName).txt"
+        let outputPath = "\(outputDir)/\(name).txt"
         let outputData = results.map { "\($0.patternLength);\($0.textLength);\($0.time)" }.joined(separator: "\n")
 
         try FileManager.default.createDirectory(atPath: outputDir, withIntermediateDirectories: true)
