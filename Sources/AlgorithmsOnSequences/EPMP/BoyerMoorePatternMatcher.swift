@@ -28,8 +28,8 @@ public struct BoyerMoorePatternMatcher<Element>: PatternMatcher where Element: H
         }
 
         // Common longest common suffixes and borders of the pattern with itself in O(n)
-        let longestCommonSuffixes = ZBoxUtils.findLongestCommonSuffixes(in: pattern)
-        let longestCommonBorders = ZBoxUtils.findLongestCommonBorders(in: pattern)
+        let longestCommonSuffixes = pattern.longestCommonSuffixes
+        let longestCommonBorders = pattern.longestCommonBorders
 
         // Compute rightmost copy table for good suffix rule
         var rightmostCopyTable = Array(repeating: 0, count: pattern.count)
