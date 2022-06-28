@@ -4,7 +4,9 @@ set -e
 cd "$(dirname $0)/.."
 
 rev="HEAD"
-output_file="Zips/swift-algorithms-on-sequences-$(git rev-parse --short $rev).zip"
+rev_date="$(git show -s --format=%cd --date=format:"%Y-%m-%d" $rev)"
+rev_sha="$(git rev-parse --short $rev)"
+output_file="Zips/swift-algorithms-on-sequences-$rev_date-$rev_sha.zip"
 
 mkdir -p Zips
 
