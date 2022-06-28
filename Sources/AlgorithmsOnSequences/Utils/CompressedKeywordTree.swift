@@ -1,11 +1,29 @@
 /// A trie with compressed edges, e.g. suitable for representing suffix trees.
-public struct CompressedKeywordTree<Edge, Label> where Edge: Hashable {
+public struct CompressedKeywordTree<Edge> where Edge: Hashable {
     private var children: [Edge: Child]
-    public var label: Label?
+
+    public var isLeaf: Bool { children.isEmpty }
+
+    /// The paths to the tree's leafs collected by
+    /// depth-first search traversal.
+    public var depthFirstSearchedPaths: [[Edge]] {
+        isLeaf ? [[]] : children.flatMap { (edge, child) in
+            child.node.depthFirstSearchedPaths.map { [edge] + child.remainingEdges + $0 }
+        }
+    }
+
+    /// The depths collected by depth-first search traversal.
+    /// Semantically equivalent to `depthFirstSearchedPaths.map(\.count)`
+    /// (but more efficient).
+    public var depthFirstSearchedDepths: [Int] {
+        isLeaf ? [0] : children.flatMap { (edge, child) in
+            child.node.depthFirstSearchedDepths.map { 1 + child.remainingEdges.count + $0 }
+        }
+    }
 
     private struct Child {
         let remainingEdges: [Edge]
-        let node: CompressedKeywordTree<Edge, Label>
+        let node: CompressedKeywordTree<Edge>
 
         func isPrefix<Path>(of path: Path) -> Bool
             where Path: Collection,
@@ -15,9 +33,8 @@ public struct CompressedKeywordTree<Edge, Label> where Edge: Hashable {
     }
 
     /// Creates a new compressed keyword tree.
-    public init(label: Label? = nil) {
+    public init() {
         children = [:]
-        self.label = label
     }
 
     /// Fetches the child connected by the given path.
