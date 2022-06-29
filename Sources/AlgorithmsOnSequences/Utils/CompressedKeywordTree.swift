@@ -45,9 +45,35 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
             node.children[edge] = tail
         }
 
-        mutating func extend(by edge: Edge) {
-            remainingEdges.append(edge)
-            node.extend(by: edge)
+        mutating func extend<Path>(path: Path, by newEdge: Edge)
+            where Path: Collection,
+                  Path.Element == Edge {
+            let pathEdges = Array(path)
+            if pathEdges == remainingEdges {
+                // Ukkonen's algorithm rule 1
+                remainingEdges.append(newEdge)
+            } else {
+                let lcp = pathEdges.longestCommonPrefix(remainingEdges)
+                if lcp.count == remainingEdges.count {
+                    // Recurse
+                    node.extend(path: path.dropFirst(remainingEdges.count), by: newEdge)
+                } else {
+                    assert(lcp.count < remainingEdges.count)
+                    guard remainingEdges[lcp.count] != newEdge else {
+                        // Ukkonen's algorithm rule 3, do nothing
+                        return
+                    }
+                    // Ukkonen's algorithm rule 2, split
+                    let tail = remainingEdges[lcp.count...]
+                    assert(!tail.isEmpty)
+                    assert(tail[0] != newEdge)
+                    remainingEdges = Array(lcp)
+                    node = .init(children: [
+                        tail[0]: .init(remainingEdges: Array(tail), node: node),
+                        newEdge: .init(),
+                    ])
+                }
+            }
         }
     }
 
@@ -72,30 +98,23 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
         return child.node[path.dropFirst(child.remainingEdges.count + 1)]
     }
 
-    /// Extends the tree with the given element
+    /// Extends a path in the tree, i.e. a step in Ukkonen's algorithm.
     /// 
-    /// - Parameter edge: The element to extend the tree by
-    public mutating func extend(by extended: Edge) {
-        for edge in children.keys {
-            children[edge]!.extend(by: extended)
-        }
-    }
-
-    /// Performs a step in Ukkonen's algorithm, i.e. turns a suffix tree of
-    /// `S[...i]` into a suffix tree of `S[...i + 1]` (given `S[i + 1]`).
-    ///
-    /// - Parameter edge: `S[i + 1]`
-    public mutating func ukkonenStep(by edge: Edge) {
-        // Perform extensions
-        extend(by: edge)
-        // Add new edge
-        if var child = children[edge] {
-            if !child.remainingEdges.isEmpty {
-                child.split()
+    /// - Parameters:
+    ///   - path: The path to extend
+    ///   - by: The edge to extend with
+    public mutating func extend<Path>(path: Path, by newEdge: Edge)
+        where Path: Collection,
+              Path.Element == Edge {
+        if let first = path.first {
+            if var child = children[first] {
+                child.extend(path: path.dropFirst(), by: newEdge)
+                children[first] = child
+            } else {
+                children[first] = Child(remainingEdges: path.dropFirst() + [newEdge])
             }
-            children[edge] = child
         } else {
-            children[edge] = Child()
+            children[newEdge] = Child()
         }
     }
 

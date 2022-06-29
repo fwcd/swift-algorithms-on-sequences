@@ -6,8 +6,10 @@ public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable
         var suffixTree = CompressedKeywordTree<Element>()
 
         // Iterate phases, in every step i we build the suffix tree of text[...i]
-        for element in text {
-            suffixTree.ukkonenStep(by: element)
+        for prefix in text.prefixes.dropFirst() {
+            for suffix in prefix.suffixes.dropLast() {
+                suffixTree.extend(path: suffix.dropLast(), by: suffix.last!)
+            }
         }
 
         textLength = text.count
