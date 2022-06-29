@@ -11,7 +11,7 @@ An implementation of various string search algorithms for Swift.
   - [x] Z-Box algorithm (linear time)
   - [x] Boyer-Moore algorithm
   - [x] Knuth-Morris-Pratt algorithm
-  - [ ] Ukkonen's algorithm
+  - [ ] Ukkonen's algorithm (partially implemented)
 - Exact Set Matching Problem (ESMP)
   - [x] Naive algorithm
   - [ ] Aho-Corasick algorithm
