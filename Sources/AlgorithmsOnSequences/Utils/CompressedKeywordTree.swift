@@ -69,7 +69,7 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
                     assert(tail[0] != newEdge)
                     remainingEdges = Array(lcp)
                     node = .init(children: [
-                        tail[0]: .init(remainingEdges: Array(tail), node: node),
+                        tail[0]: .init(remainingEdges: Array(tail.dropFirst()), node: node),
                         newEdge: .init(),
                     ])
                 }
