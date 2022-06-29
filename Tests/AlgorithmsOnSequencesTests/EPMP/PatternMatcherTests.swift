@@ -24,6 +24,11 @@ final class PatternMatcherTests: XCTestCase {
         testPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
     }
 
+    // TODO: Test and fix Ukkonen
+    // func testUkkonenPatternMatcher() {
+    //     testPatternMatcher(UkkonenTextSearcher.PatternMatcher.self)
+    // }
+
     private func testPatternMatcher<M>(_ type: M.Type)
         where M: PatternMatcher,
               M.Element == Character {

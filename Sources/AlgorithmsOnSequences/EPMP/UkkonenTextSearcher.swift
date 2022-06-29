@@ -19,6 +19,6 @@ public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable
     public func findAllOccurrences(of pattern: [Element]) -> [Int] {
         let depths = suffixTree[pattern]?.depthFirstSearchedDepths ?? []
         // Subtract suffix lengths from text to obtain the positions
-        return depths.map { textLength - $0 - pattern.count }
+        return depths.map { textLength - $0 - pattern.count }.sorted()
     }
 }

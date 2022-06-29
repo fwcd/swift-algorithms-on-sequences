@@ -11,20 +11,20 @@ final class CompressedKeywordTreeTests: XCTestCase {
         XCTAssertEqual(tree.depthFirstSearchedPaths, [[]])
     }
 
-    func testUkkonenSteps() {
-        var tree = CompressedKeywordTree<Character>()
+    // func testUkkonenSteps() {
+    //     var tree = CompressedKeywordTree<Character>()
 
-        tree.ukkonenStep(by: "a")
-        XCTAssertFalse(tree.isLeaf)
-        XCTAssertEqual(tree, .init(children: ["a": .init()]))
+    //     tree.ukkonenStep(by: "a")
+    //     XCTAssertFalse(tree.isLeaf)
+    //     XCTAssertEqual(tree, .init(children: ["a": .init()]))
 
-        tree.ukkonenStep(by: "a")
-        XCTAssertEqual(tree, .init(children: ["a": .init(node: .init(children: ["a": .init()]))]))
+    //     tree.ukkonenStep(by: "a")
+    //     XCTAssertEqual(tree, .init(children: ["a": .init(node: .init(children: ["a": .init()]))]))
 
-        tree.ukkonenStep(by: "b")
-        XCTAssertEqual(tree, .init(children: [
-            "a": .init(remainingEdges: ["b"], node: .init(children: ["a": .init(remainingEdges: ["b"])])),
-            "b": .init()
-        ]))
-    }
+    //     tree.ukkonenStep(by: "b")
+    //     XCTAssertEqual(tree, .init(children: [
+    //         "a": .init(remainingEdges: ["b"], node: .init(children: ["a": .init(remainingEdges: ["b"])])),
+    //         "b": .init()
+    //     ]))
+    // }
 }
