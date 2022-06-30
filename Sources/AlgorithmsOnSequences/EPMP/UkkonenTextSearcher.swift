@@ -1,6 +1,6 @@
 public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable {
     private let textLength: Int
-    private let suffixTree: CompressedKeywordTree<Element>
+    /* internal for testing */ let suffixTree: CompressedKeywordTree<Element>
 
     public init(text: [Element]) {
         var suffixTree = CompressedKeywordTree<Element>()

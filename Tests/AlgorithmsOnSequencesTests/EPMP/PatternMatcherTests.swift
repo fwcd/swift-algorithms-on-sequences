@@ -24,14 +24,9 @@ final class PatternMatcherTests: XCTestCase {
         testPatternMatcher(KnuthMorrisPrattPatternMatcher.self)
     }
 
-    // TODO: Test and fix Ukkonen
-    // func testUkkonenPatternMatcher() {
-    //     testPatternMatcher(UkkonenTextSearcher.PatternMatcher.self)
-    // }
-
-    private func testPatternMatcher<M>(_ type: M.Type)
-        where M: PatternMatcher,
-              M.Element == Character {
+    private func testPatternMatcher<Matcher>(_ type: Matcher.Type)
+        where Matcher: PatternMatcher,
+              Matcher.Element == Character {
         assertThat(type, finds: "abc", in: "abcabc", at: [0, 3])
         assertThat(type, finds: "aa", in: "aaaaa", at: [0, 1, 2, 3])
         assertThat(type, finds: "def", in: "feddEf", at: [])
@@ -56,9 +51,9 @@ final class PatternMatcherTests: XCTestCase {
         }
     }
 
-    private func assertThat<M>(_ type: M.Type, finds pattern: String, in text: String, at indices: [Int], line: UInt = #line)
-        where M: PatternMatcher,
-              M.Element == Character {
-        XCTAssertEqual(M.init(pattern: Array(pattern)).findAllOccurrences(in: Array(text)), indices, line: line)
+    private func assertThat<Matcher>(_ type: Matcher.Type, finds pattern: String, in text: String, at indices: [Int], line: UInt = #line)
+        where Matcher: PatternMatcher,
+              Matcher.Element == Character {
+        XCTAssertEqual(Matcher(pattern: Array(pattern)).findAllOccurrences(in: Array(text)), indices, line: line)
     }
 }
