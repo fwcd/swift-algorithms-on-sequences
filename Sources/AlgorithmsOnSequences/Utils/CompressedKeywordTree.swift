@@ -7,18 +7,22 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
     /// The paths to the tree's leafs collected by
     /// depth-first search traversal.
     public var depthFirstSearchedPaths: [[Edge]] {
-        [[]] + children.flatMap { (edge, child) in
-            child.node.depthFirstSearchedPaths.map { [edge] + child.remainingEdges + $0 }
-        }
+        isLeaf
+            ? [[]]
+            : children.flatMap { (edge, child) in
+                child.node.depthFirstSearchedPaths.map { [edge] + child.remainingEdges + $0 }
+            }
     }
 
     /// The depths collected by depth-first search traversal.
     /// Semantically equivalent to `depthFirstSearchedPaths.map(\.count)`
     /// (but more efficient).
     public var depthFirstSearchedDepths: [Int] {
-        [0] + children.flatMap { (edge, child) in
-            child.node.depthFirstSearchedDepths.map { 1 + child.remainingEdges.count + $0 }
-        }
+        isLeaf
+            ? [0]
+            : children.flatMap { (edge, child) in
+                child.node.depthFirstSearchedDepths.map { 1 + child.remainingEdges.count + $0 }
+            }
     }
 
     /* internal for testing */ struct Child: Hashable {

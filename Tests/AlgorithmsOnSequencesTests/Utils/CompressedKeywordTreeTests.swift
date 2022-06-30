@@ -223,4 +223,33 @@ final class CompressedKeywordTreeTests: XCTestCase {
             "c": .init(),
         ]))
     }
+
+    func testSearch() {
+        // Suffix tree of 'xabxac'
+        let tree: CompressedKeywordTree<Character> = .init(children: [
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"]),
+            ])),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+            "c": .init(),
+        ])
+
+        XCTAssert(tree.contains(path: Array("c")))
+        XCTAssert(tree.contains(path: Array("ac")))
+        XCTAssert(tree.contains(path: Array("xac")))
+        XCTAssert(tree.contains(path: Array("bxac")))
+        XCTAssert(tree.contains(path: Array("abxac")))
+        XCTAssert(tree.contains(path: Array("xabxac")))
+        XCTAssertFalse(tree.contains(path: Array("axac")))
+
+        let traversed = tree.depthFirstSearchedPaths.sorted { $0.lexicographicallyPrecedes($1) }
+        let suffixes = Array("xabxac").suffixes.dropLast().map(Array.init).sorted { $0.lexicographicallyPrecedes($1) }
+        XCTAssertEqual(traversed, suffixes)
+        XCTAssertEqual(Set(traversed.map(\.count)), Set(tree.depthFirstSearchedDepths))
+    }
 }
