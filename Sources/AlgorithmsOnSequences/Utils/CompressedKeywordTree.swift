@@ -25,6 +25,19 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
             }
     }
 
+    private var prettyLines: [String] {
+        isLeaf
+            ? ["<leaf>"]
+            : children.flatMap { (edge, child) in
+                ["\([edge] + child.remainingEdges)"] + child.node.prettyLines.map { "  " + $0 }
+            }
+    }
+
+    /// A prettyprinted representation of the tree.
+    public var pretty: String {
+        prettyLines.joined(separator: "\n")
+    }
+
     /* internal for testing */ struct Child: Hashable {
         var remainingEdges: [Edge] = []
         var node: CompressedKeywordTree<Edge> = .init()
