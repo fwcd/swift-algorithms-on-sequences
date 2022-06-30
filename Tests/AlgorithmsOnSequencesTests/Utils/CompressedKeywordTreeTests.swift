@@ -224,6 +224,80 @@ final class CompressedKeywordTreeTests: XCTestCase {
         ]))
     }
 
+    func testUkkonenSteps3() {
+        var tree = CompressedKeywordTree<Character>()
+
+        // Simulate Ukkonen's algorithm on another example ('baa$')
+
+        // 1. Phase (suffixes of 'b')
+        tree.extend(path: [], by: "b")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(),
+        ]))
+
+        // 2. Phase (suffixes of 'ba')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(),
+            "a": .init(),
+        ]))
+        tree.extend(path: ["b"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a"]),
+            "a": .init(),
+        ]))
+
+        // 3. Phase (suffixes of 'baa')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a"]),
+            "a": .init(),
+        ]))
+        tree.extend(path: ["a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a"]),
+            "a": .init(remainingEdges: ["a"]),
+        ]))
+        tree.extend(path: ["b", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a", "a"]),
+            "a": .init(remainingEdges: ["a"]),
+        ]))
+        tree.extend(path: [], by: "$")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a", "a"]),
+            "a": .init(remainingEdges: ["a"]),
+            "$": .init(),
+        ]))
+        tree.extend(path: ["a"], by: "$")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a", "a"]),
+            "a": .init(node: .init(children: [
+                "$": .init(),
+                "a": .init(),
+            ])),
+            "$": .init(),
+        ]))
+        tree.extend(path: ["a", "a"], by: "$")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a", "a"]),
+            "a": .init(node: .init(children: [
+                "$": .init(),
+                "a": .init(remainingEdges: ["$"]),
+            ])),
+            "$": .init(),
+        ]))
+        tree.extend(path: ["b", "a", "a"], by: "$")
+        XCTAssertEqual(tree, .init(children: [
+            "b": .init(remainingEdges: ["a", "a", "$"]),
+            "a": .init(node: .init(children: [
+                "$": .init(),
+                "a": .init(remainingEdges: ["$"]),
+            ])),
+            "$": .init(),
+        ]))
+    }
+
     func testSearch() {
         // Suffix tree of 'xabxac'
         let tree: CompressedKeywordTree<Character> = .init(children: [
