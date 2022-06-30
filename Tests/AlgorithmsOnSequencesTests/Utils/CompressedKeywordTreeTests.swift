@@ -298,6 +298,121 @@ final class CompressedKeywordTreeTests: XCTestCase {
         ]))
     }
 
+    func testUkkonenSteps4() {
+        var tree = CompressedKeywordTree<Character>()
+
+        // Simulate Ukkonen's algorithm on another example ('abaaa')
+
+        // 1. Phase (suffixes of 'b')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(),
+        ]))
+
+        // 2. Phase (suffixes of 'ab')
+        tree.extend(path: [], by: "b")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(),
+            "b": .init(),
+        ]))
+        tree.extend(path: ["a"], by: "b")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(remainingEdges: ["b"]),
+            "b": .init(),
+        ]))
+
+        // 3. Phase (suffixes of 'aba')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(remainingEdges: ["b"]),
+            "b": .init(),
+        ]))
+        tree.extend(path: ["b"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(remainingEdges: ["b"]),
+            "b": .init(remainingEdges: ["a"]),
+        ]))
+        tree.extend(path: ["a", "b"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(remainingEdges: ["b", "a"]),
+            "b": .init(remainingEdges: ["a"]),
+        ]))
+
+        // 4. Phase (suffixes of 'abaa')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(remainingEdges: ["b", "a"]),
+            "b": .init(remainingEdges: ["a"]),
+        ]))
+        tree.extend(path: ["a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(),
+                "b": .init(remainingEdges: ["a"]),
+            ])),
+            "b": .init(remainingEdges: ["a"]),
+        ]))
+        tree.extend(path: ["b", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(),
+                "b": .init(remainingEdges: ["a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a"]),
+        ]))
+
+        tree.extend(path: ["a", "b", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(),
+                "b": .init(remainingEdges: ["a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a"]),
+        ]))
+        
+        // 4. Phase (suffixes of 'abaaa')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(),
+                "b": .init(remainingEdges: ["a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a"]),
+        ]))
+        tree.extend(path: ["a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(),
+                "b": .init(remainingEdges: ["a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a"]),
+        ]))
+        tree.extend(path: ["a", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(remainingEdges: ["a"]),
+                "b": .init(remainingEdges: ["a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a"]),
+        ]))
+        tree.extend(path: ["b", "a", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(remainingEdges: ["a"]),
+                "b": .init(remainingEdges: ["a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a", "a"]),
+        ]))
+        tree.extend(path: ["a", "b", "a", "a"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "a": .init(node: .init(children: [
+                "a": .init(remainingEdges: ["a"]),
+                "b": .init(remainingEdges: ["a", "a", "a"]),
+            ])),
+            "b": .init(remainingEdges: ["a", "a", "a"]),
+        ]))
+    }
+
     func testSearch() {
         // Suffix tree of 'xabxac'
         let tree: CompressedKeywordTree<Character> = .init(children: [

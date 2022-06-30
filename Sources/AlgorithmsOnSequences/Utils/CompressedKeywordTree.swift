@@ -66,7 +66,7 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
             where Path: Collection,
                   Path.Element == Edge {
             let pathEdges = Array(path)
-            if pathEdges == remainingEdges {
+            if pathEdges == remainingEdges && node.isLeaf {
                 // Ukkonen's algorithm rule 1
                 remainingEdges.append(newEdge)
             } else {
