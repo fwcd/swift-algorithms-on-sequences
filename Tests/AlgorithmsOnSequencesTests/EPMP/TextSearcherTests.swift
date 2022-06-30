@@ -25,8 +25,7 @@ final class TextSearcherTests: XCTestCase {
             ])),
         ]))
 
-        // TODO: Fix
-        // testTextSearcher(UkkonenTextSearcher.self)
+        testTextSearcher(UkkonenTextSearcher.self)
     }
 
     private func testTextSearcher<Searcher>(_ type: Searcher.Type)

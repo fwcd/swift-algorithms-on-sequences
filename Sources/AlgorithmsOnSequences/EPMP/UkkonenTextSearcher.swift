@@ -35,14 +35,13 @@ public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable
     }
 
     public func findAllOccurrences(of pattern: [Element]) -> [Int] {
-        let tokens = pattern.map(Token.element) + [Token.end]
+        guard !pattern.isEmpty else { return Array(0..<textLength) }
+        let tokens = pattern.map(Token.element)
         let depths = suffixTree[tokens]?.depthFirstSearchedDepths ?? []
-        print(suffixTree.pretty)
-        print()
-        print("Looking for \(tokens): \(depths)")
-        print()
         // Subtract suffix lengths from text to obtain the positions
-        let occurrences = depths.map { textLength - ($0 + pattern.count) }.sorted()
-        return occurrences
+        return depths.map { depth -> Int in
+            let pathHeight = pattern.count + depth - 1 // subtract the $
+            return textLength - pathHeight
+        }.sorted()
     }
 }
