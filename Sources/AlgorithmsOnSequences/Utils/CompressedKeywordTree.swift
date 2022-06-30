@@ -93,13 +93,26 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
         self.init(children: [:])
     }
 
-    /// Fetches the child connected by the given path.
+    /// Fetches the subtree connected by the given path.
     public subscript<Path>(path: Path) -> Self?
         where Path: Collection,
               Path.Element == Edge {
         guard let edge = path.first else { return self }
-        guard let child = children[edge], child.isPrefix(of: path.dropFirst()) else { return nil }
-        return child.node[path.dropFirst(child.remainingEdges.count + 1)]
+        guard let child = children[edge] else { return nil }
+        let tail = Array(path.dropFirst())
+        let lcp = tail.longestCommonPrefix(child.remainingEdges)
+        if lcp.count == child.remainingEdges.count {
+            // Recurse
+            return child.node[path.dropFirst(child.remainingEdges.count + 1)]
+        } else {
+            assert(lcp.count < child.remainingEdges.count)
+            guard lcp.count == tail.count || child.remainingEdges[lcp.count] == tail[lcp.count] else { return nil }
+            // Return a split node
+            return .init(children: [child.remainingEdges[0]: .init(
+                remainingEdges: Array(tail.dropFirst()),
+                node: child.node
+            )])
+        }
     }
 
     /// Extends a path in the tree, i.e. a step in Ukkonen's algorithm.

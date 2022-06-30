@@ -251,5 +251,13 @@ final class CompressedKeywordTreeTests: XCTestCase {
         let suffixes = Array("xabxac").suffixes.dropLast().map(Array.init).sorted { $0.lexicographicallyPrecedes($1) }
         XCTAssertEqual(traversed, suffixes)
         XCTAssertEqual(Set(traversed.map(\.count)), Set(tree.depthFirstSearchedDepths))
+
+        let xSubtree: CompressedKeywordTree<Character> = .init(children: [
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"]),
+            ]))
+        ])
+        XCTAssertEqual(tree["x"], xSubtree)
     }
 }
