@@ -99,16 +99,17 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
               Path.Element == Edge {
         guard let edge = path.first else { return self }
         guard let child = children[edge] else { return nil }
-        let tail = Array(path.dropFirst())
-        let lcp = tail.longestCommonPrefix(child.remainingEdges)
+        let pathTail = Array(path.dropFirst())
+        let lcp = pathTail.longestCommonPrefix(child.remainingEdges)
         if lcp.count == child.remainingEdges.count {
             // Recurse
             return child.node[path.dropFirst(child.remainingEdges.count + 1)]
         } else {
             assert(lcp.count < child.remainingEdges.count)
-            guard lcp.count == tail.count || child.remainingEdges[lcp.count] == tail[lcp.count] else { return nil }
+            guard lcp.count == pathTail.count || child.remainingEdges[lcp.count] == pathTail[lcp.count] else { return nil }
             // Return a split node
-            return .init(children: [child.remainingEdges[0]: .init(
+            let tail = Array(child.remainingEdges[lcp.count...])
+            return .init(children: [tail[0]: .init(
                 remainingEdges: Array(tail.dropFirst()),
                 node: child.node
             )])

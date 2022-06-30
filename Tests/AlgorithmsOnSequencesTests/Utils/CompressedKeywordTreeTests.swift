@@ -259,5 +259,23 @@ final class CompressedKeywordTreeTests: XCTestCase {
             ]))
         ])
         XCTAssertEqual(tree["x"], xSubtree)
+        XCTAssertEqual(Set(xSubtree.depthFirstSearchedPaths), [
+            Array("ac"),
+            Array("abxac"),
+        ])
+
+        let xaSubtree: CompressedKeywordTree<Character> = .init(children: [
+            "c": .init(),
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+        ])
+        XCTAssertEqual(tree["xa"], xaSubtree)
+
+        let xacSubtree: CompressedKeywordTree<Character> = .init()
+        XCTAssertEqual(tree["xac"], xacSubtree)
+
+        let xabSubtree: CompressedKeywordTree<Character> = .init(children: [
+            "x": .init(remainingEdges: ["a", "c"]),
+        ])
+        XCTAssertEqual(tree["xab"], xabSubtree)
     }
 }
