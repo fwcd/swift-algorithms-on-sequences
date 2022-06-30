@@ -107,14 +107,15 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
         where Path: Collection,
               Path.Element == Edge {
         if let first = path.first {
+            let tail = path.dropFirst()
             if var child = children[first] {
-                child.extend(path: path.dropFirst(), by: newEdge)
+                child.extend(path: tail, by: newEdge)
                 children[first] = child
             } else {
-                children[first] = Child(remainingEdges: path.dropFirst() + [newEdge])
+                children[first] = Child(remainingEdges: tail + [newEdge])
             }
         } else {
-            children[newEdge] = Child()
+            children[newEdge] = children[newEdge] ?? Child()
         }
     }
 

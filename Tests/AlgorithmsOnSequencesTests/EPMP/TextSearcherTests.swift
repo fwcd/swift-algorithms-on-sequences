@@ -1,5 +1,6 @@
 import XCTest
 @testable import AlgorithmsOnSequences
+import MirrorDiffKit
 
 final class TextSearcherTests: XCTestCase {
     func testNaiveTextSearcher() {
@@ -8,7 +9,7 @@ final class TextSearcherTests: XCTestCase {
 
     // TODO: Fix
     // func testUkkonenTextSearcher() {
-    //     XCTAssertEqual(UkkonenTextSearcher(text: Array("xabxac")).suffixTree, .init(children: [
+    //     assertThat(UkkonenTextSearcher(text: Array("xabxac")).suffixTree, equals: .init(children: [
     //         "b": .init(remainingEdges: ["x", "a", "c"]),
     //         "c": .init(),
     //         "a": .init(node: .init(children: [
@@ -55,5 +56,9 @@ final class TextSearcherTests: XCTestCase {
         where Searcher: TextSearcher,
               Searcher.Element == Character {
         XCTAssertEqual(Searcher(text: Array(text)).findAllOccurrences(of: Array(pattern)), indices, line: line)
+    }
+
+    private func assertThat<T>(_ value1: T, equals value2: T) where T: Equatable {
+        XCTAssertEqual(value1, value2, diff(between: value1, and: value2))
     }
 }

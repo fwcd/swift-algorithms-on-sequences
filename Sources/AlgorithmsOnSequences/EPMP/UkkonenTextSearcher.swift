@@ -7,8 +7,10 @@ public struct UkkonenTextSearcher<Element>: TextSearcher where Element: Hashable
 
         // Iterate phases, in every step i we build the suffix tree of text[...i]
         for prefix in text.prefixes.dropFirst() {
+            assert(!prefix.isEmpty)
             for suffix in prefix.suffixes.dropLast() {
-                suffixTree.extend(path: suffix.dropLast(), by: suffix.last!)
+                assert(!suffix.isEmpty)
+                suffixTree.extend(path: suffix.dropLast(), by: prefix.last!)
             }
         }
 
