@@ -2,6 +2,12 @@
 public struct ZBoxPatternMatcher<Element>: PatternMatcher where Element: Equatable {
     private let pattern: [Element]
 
+    /// A token for use in the Z-Box algorithm.
+    private enum Token: Equatable {
+        case element(Element)
+        case boundary
+    }
+
     public init(pattern: [Element]) {
         self.pattern = pattern
     }
@@ -21,10 +27,4 @@ public struct ZBoxPatternMatcher<Element>: PatternMatcher where Element: Equatab
     }
 }
 
-/// A token for use in the Z-Box algorithm.
-private enum Token<Element> {
-    case element(Element)
-    case boundary
-}
 
-extension Token: Equatable where Element: Equatable {}

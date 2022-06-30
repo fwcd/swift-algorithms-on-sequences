@@ -8,16 +8,20 @@ final class TextSearcherTests: XCTestCase {
     }
 
     func testUkkonenTextSearcher() {
+        let el = UkkonenTextSearcher<Character>.Token.element
+        let end = UkkonenTextSearcher<Character>.Token.end
+
         assertThat(UkkonenTextSearcher(text: Array("xabxac")).suffixTree, equals: .init(children: [
-            "b": .init(remainingEdges: ["x", "a", "c"]),
-            "c": .init(),
-            "a": .init(node: .init(children: [
-                "c": .init(),
-                "b": .init(remainingEdges: ["x", "a", "c"]),
+            end: .init(),
+            el("b"): .init(remainingEdges: ["x", "a", "c"].map(el) + [end]),
+            el("c"): .init(remainingEdges: [end]),
+            el("a"): .init(node: .init(children: [
+                el("c"): .init(remainingEdges: [end]),
+                el("b"): .init(remainingEdges: ["x", "a", "c"].map(el) + [end]),
             ])),
-            "x": .init(remainingEdges: ["a"], node: .init(children: [
-                "c": .init(),
-                "b": .init(remainingEdges: ["x", "a", "c"]),
+            el("x"): .init(remainingEdges: ["a"].map(el), node: .init(children: [
+                el("c"): .init(remainingEdges: [end]),
+                el("b"): .init(remainingEdges: ["x", "a", "c"].map(el) + [end]),
             ])),
         ]))
 
