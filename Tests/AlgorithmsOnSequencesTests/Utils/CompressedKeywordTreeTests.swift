@@ -94,7 +94,7 @@ final class CompressedKeywordTreeTests: XCTestCase {
             "b": .init(),
         ]))
 
-        // 4. Phase (suffixes 'xabx')
+        // 4. Phase (suffixes of 'xabx')
         tree.extend(path: [], by: "x")
         XCTAssertEqual(tree, .init(children: [
             "x": .init(remainingEdges: ["a", "b"]),
@@ -118,6 +118,109 @@ final class CompressedKeywordTreeTests: XCTestCase {
             "x": .init(remainingEdges: ["a", "b", "x"]),
             "a": .init(remainingEdges: ["b", "x"]),
             "b": .init(remainingEdges: ["x"]),
+        ]))
+
+        // 5. Phase (suffixes of 'xabxa')
+        tree.extend(path: [], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x"]),
+            "a": .init(remainingEdges: ["b", "x"]),
+            "b": .init(remainingEdges: ["x"]),
+        ]))
+        tree.extend(path: ["x"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x"]),
+            "a": .init(remainingEdges: ["b", "x"]),
+            "b": .init(remainingEdges: ["x"]),
+        ]))
+        tree.extend(path: ["b", "x"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x"]),
+            "a": .init(remainingEdges: ["b", "x"]),
+            "b": .init(remainingEdges: ["x", "a"]),
+        ]))
+        tree.extend(path: ["a", "b", "x"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x"]),
+            "a": .init(remainingEdges: ["b", "x", "a"]),
+            "b": .init(remainingEdges: ["x", "a"]),
+        ]))
+        tree.extend(path: ["x", "a", "b", "x"], by: "a")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x", "a"]),
+            "a": .init(remainingEdges: ["b", "x", "a"]),
+            "b": .init(remainingEdges: ["x", "a"]),
+        ]))
+
+        // 6. Phase (suffixes of 'xabxac')
+        tree.extend(path: [], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x", "a"]),
+            "a": .init(remainingEdges: ["b", "x", "a"]),
+            "b": .init(remainingEdges: ["x", "a"]),
+            "c": .init(),
+        ]))
+        tree.extend(path: ["a"], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a", "b", "x", "a"]),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a"]),
+            "c": .init(),
+        ]))
+        tree.extend(path: ["x", "a"], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"]),
+            ])),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a"]),
+            "c": .init(),
+        ]))
+        tree.extend(path: ["b", "x", "a"], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"]),
+            ])),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+            "c": .init(),
+        ]))
+        tree.extend(path: ["a", "b", "x", "a"], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a"]),
+            ])),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+            "c": .init(),
+        ]))
+        tree.extend(path: ["x", "a", "b", "x", "a"], by: "c")
+        XCTAssertEqual(tree, .init(children: [
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"]),
+            ])),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"])
+            ])),
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+            "c": .init(),
         ]))
     }
 }

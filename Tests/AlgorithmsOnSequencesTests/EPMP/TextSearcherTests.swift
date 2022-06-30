@@ -7,23 +7,23 @@ final class TextSearcherTests: XCTestCase {
         testTextSearcher(NaiveTextSearcher.self)
     }
 
-    // TODO: Fix
-    // func testUkkonenTextSearcher() {
-    //     assertThat(UkkonenTextSearcher(text: Array("xabxac")).suffixTree, equals: .init(children: [
-    //         "b": .init(remainingEdges: ["x", "a", "c"]),
-    //         "c": .init(),
-    //         "a": .init(node: .init(children: [
-    //             "c": .init(),
-    //             "b": .init(remainingEdges: ["x", "a", "c"]),
-    //         ])),
-    //         "x": .init(remainingEdges: ["a"], node: .init(children: [
-    //             "c": .init(),
-    //             "b": .init(remainingEdges: ["x", "a", "c"]),
-    //         ])),
-    //     ]))
+    func testUkkonenTextSearcher() {
+        assertThat(UkkonenTextSearcher(text: Array("xabxac")).suffixTree, equals: .init(children: [
+            "b": .init(remainingEdges: ["x", "a", "c"]),
+            "c": .init(),
+            "a": .init(node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"]),
+            ])),
+            "x": .init(remainingEdges: ["a"], node: .init(children: [
+                "c": .init(),
+                "b": .init(remainingEdges: ["x", "a", "c"]),
+            ])),
+        ]))
 
-    //     testTextSearcher(UkkonenTextSearcher.self)
-    // }
+        // TODO: Fix
+        // testTextSearcher(UkkonenTextSearcher.self)
+    }
 
     private func testTextSearcher<Searcher>(_ type: Searcher.Type)
         where Searcher: TextSearcher,

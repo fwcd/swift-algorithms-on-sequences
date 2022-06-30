@@ -64,7 +64,7 @@ public struct CompressedKeywordTree<Edge>: Hashable where Edge: Hashable {
                         return
                     }
                     // Ukkonen's algorithm rule 2, split
-                    let tail = remainingEdges[lcp.count...]
+                    let tail = Array(remainingEdges[lcp.count...])
                     assert(!tail.isEmpty)
                     assert(tail[0] != newEdge)
                     remainingEdges = Array(lcp)
