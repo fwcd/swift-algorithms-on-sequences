@@ -18,6 +18,6 @@ An implementation of various string search algorithms for Swift.
 
 ## Getting Started
 
-- To build the package, make sure to have Swift 5.6 or newer installed and run `swift build`.
+- To build the package, make sure to have Swift 5.9 or newer installed and run `swift build`.
 - To run the test suite, invoke `swift test`.
 - To run the benchmarks, invoke `Scripts/run-benchmarks` and then `Scripts/plot-benchmarks` to plot them (make sure to have Python 3.9 or newer, `matplotlib`, `numpy` and `scipy` installed)
