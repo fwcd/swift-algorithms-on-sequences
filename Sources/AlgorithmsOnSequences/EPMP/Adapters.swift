@@ -2,6 +2,8 @@
 /// type. Note that this may negate the performance benefit of
 /// preprocessing the text.
 public struct TextSearcherPatternMatcher<Wrapped>: PatternMatcher where Wrapped: TextSearcher {
+    public typealias Element = Wrapped.Element
+
     private let pattern: [Wrapped.Element]
 
     public init(pattern: [Wrapped.Element]) {
@@ -17,6 +19,8 @@ public struct TextSearcherPatternMatcher<Wrapped>: PatternMatcher where Wrapped:
 /// type. Note that this may negate the performance benefit of
 /// preprocessing the text.
 public struct PatternMatcherTextSearcher<Wrapped>: TextSearcher where Wrapped: PatternMatcher {
+    public typealias Element = Wrapped.Element
+
     private let text: [Wrapped.Element]
 
     public init(text: [Wrapped.Element]) {
